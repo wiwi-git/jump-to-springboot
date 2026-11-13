@@ -2,7 +2,9 @@ package com.mysite.sbb.question;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.mysite.sbb.answer.Answer;
 import com.mysite.sbb.user.SiteUser;
@@ -14,6 +16,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
@@ -43,6 +46,9 @@ public class Question {
 	private SiteUser author;
 
 	private LocalDateTime modifyDate;
+
+	@ManyToMany
+	Set<SiteUser> voter = new HashSet<>();
 
 	public Answer addAnswer(String content, SiteUser author) {
 		Answer answer = new Answer();

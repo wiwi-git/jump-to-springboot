@@ -577,3 +577,9 @@
 - 작업: `answerList`에 `orphanRemoval = true`, `Question.deleteAnswer(answer)`(목록에서 제거), `AnswerService.delete`는 `@Transactional`로 `answer.getQuestion().deleteAnswer(answer)`. 같은 트랜잭션에서 삭제 후 `answerList`에서도 빠지는지 테스트 추가
 - 이유: 040 개선으로 답변을 질문 쪽에서 만들듯 지울 때도 질문 쪽에서 지운다. 교재의 `answerRepository.delete`는 메모리의 `answerList`에 지운 답변이 남는다(테스트로 실패 확인). 강사 14168 37강: `orphanRemoval`은 부모 목록에서 빠진 자식을 커밋 때 delete한다
 - 결과: 테스트 44개 통과. 실제 실행에서 답변 삭제 후 답변 수 2 → 1, SQL은 answerList 조회 후 커밋 때 `delete from answer`. 확인 후 개발 DB 원래대로
+
+### 082 추천, 시작 [교재] 질문 추천
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/082)
+- 작업: `Question`에 `@ManyToMany Set<SiteUser> voter`, `QuestionService.vote`, `GET /question/vote/{id}`(로그인 필요), 상세에 추천 버튼·추천 수 배지와 확인 후 이동하는 스크립트
+- 이유: 교재 3-10. 질문과 추천인은 다대다라 `question_voter` 연결 테이블이 생긴다. `Set`이라 같은 사람이 여러 번 추천해도 한 번만 센다. 교재와 차이: 013 개선처럼 `voter`를 `new HashSet<>()`으로 초기화
+- 결과: 테스트 44개 통과. 비로그인 추천은 로그인 화면으로, user1 두 번 + user2 한 번 추천 → 추천 수 2. 확인 후 개발 DB 원래대로

@@ -294,3 +294,9 @@
 - 작업: `QuestionController` 클래스에 `@RequestMapping("/question")`, 메서드 매핑은 `/list`, `/detail/{id}`로 줄임
 - 이유: 교재 2-11. 이 컨트롤러의 URL은 모두 `/question`으로 시작하므로 공통 부분을 클래스에 한 번만 적는다
 - 결과: 테스트 13개 통과, `/` 302, `/question/list` 200, `/question/detail/2` 200, `/question/detail/999` 404 (URL은 그대로)
+
+### 037 답변 기능, 시작 [교재] 상세 페이지에 답변 등록 폼
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/037)
+- 작업: `question_detail.html`에 `<form th:action="@{|/answer/create/${question.id}|}" method="post">`, `textarea name="content"`, 답변등록 버튼
+- 이유: 교재 2-12. 답변 내용을 `POST /answer/create/{질문id}`로 보낼 입력 폼을 먼저 만든다. 폼 필드의 `name`이 서버에서 받을 파라미터 이름이 된다
+- 결과: 상세 페이지에 `action="/answer/create/2"` 폼 표시. 아직 처리 컨트롤러가 없어 POST → 404

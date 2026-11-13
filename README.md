@@ -68,7 +68,7 @@
 - [x] 3-10 추천
   - [x] 개선: 추천을 CSRF 토큰이 있는 POST 요청으로, 추천 테스트
 - [x] 3-11 앵커
-- [ ] 3-12 마크다운
+- [x] 3-12 마크다운
 - [ ] 3-13 검색
 - [ ] 3-14 도전과제 (작업자가 요청할 때 진행)
   - [ ] 답변 페이징과 정렬
@@ -602,3 +602,9 @@
 - 작업: 답변 카드마다 `<a th:id="|answer_${answer.id}|">`, `AnswerService.create`가 `Answer`를 돌려주고, 등록·수정·추천 후 `/question/detail/{id}#answer_{답변id}`로 리다이렉트
 - 이유: 교재 3-11. URL의 `#answer_2`는 브라우저가 그 id를 가진 요소로 스크롤하게 한다. 교재와 차이: 040 개선으로 답변이 cascade PERSIST(flush 때 insert)로 저장되어 바로는 id가 없으므로 `create`에서 `flush()`해 id를 받는다(안 하면 테스트에서 `#answer_null`)
 - 결과: 테스트 49개 통과. 실제 실행에서 등록 → `#answer_2`, 수정 → `#answer_2`, 추천 → `#answer_1`, 상세에 `<a id="answer_N">` 앵커. 확인 후 개발 DB 원래대로
+
+### 086 마크다운, 완료 [교재] commonmark로 질문·답변 내용을 마크다운 렌더링
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/086)
+- 작업: `commonmark:0.21.0` 의존성, `CommonUtil.markdown`(@Component), 상세에서 질문·답변 내용을 `@commonUtil.markdown(...)`으로 변환해 `th:utext`로 출력
+- 이유: 교재 3-12. 마크다운으로 쓴 글을 HTML로 보여 준다. 변환 결과가 HTML이라 이스케이프하지 않는 `th:utext`를 쓴다. 교재와 차이: 타임리프 3.1.5는 `th:utext` 안의 식을 제한 모드로 평가해 교재 식이 예외(상세 500)가 나므로, `th:with`에서 변환해 변수에 담고 `th:utext`는 변수만 출력
+- 결과: 테스트 49개 통과. `# 제목` → `<h1>`, `* 항목` → `<ul><li>`, `**굵게**` → `<strong>`. 본문에 쓴 HTML 태그도 그대로 출력됨(교재 기본 동작). 확인 후 개발 DB 원래대로

@@ -30,6 +30,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
+	implementation("org.commonmark:commonmark:0.21.0")
 	testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-security-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")

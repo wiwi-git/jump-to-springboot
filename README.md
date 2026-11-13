@@ -11,7 +11,7 @@
 
 - [x] 1-02 개발 환경 준비 (프로젝트 생성)
 - [x] 1-03 스프링부트 맛보기
-- [ ] 1-04 도구 설치
+- [x] 1-04 도구 설치
 
 ### 2장 기본 기능
 
@@ -98,3 +98,9 @@
 - 작업: 롬복 의존성(`compileOnly` + `annotationProcessor`) 추가, `HelloLombok`에 `@Getter` `@Setter`
 - 이유: 교재 1-04. 반복되는 getter/setter를 직접 쓰지 않고 컴파일 시점에 만들게 한다
 - 결과: `HelloLombok.main` 실행 시 `헬로`, `5` 출력, `javap`로 getHello/setHello 등 메서드 생성 확인
+
+### 006 도구 설치, 완료 [교재] @RequiredArgsConstructor로 final 필드 생성자 만들기
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/006)
+- 작업: `HelloLombok` 필드를 `final`로 바꾸고 `@Setter` 대신 `@RequiredArgsConstructor`
+- 이유: 교재 1-04. final 필드를 받는 생성자를 롬복이 만들게 한다 (뒤에서 의존성 주입에 이 방식을 쓴다)
+- 결과: `new HelloLombok("헬로", 5)` 실행 시 `헬로`, `5` 출력, `javap`로 `HelloLombok(String, int)` 생성자 확인, setter와 기본 생성자는 사라짐

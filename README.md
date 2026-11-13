@@ -59,6 +59,7 @@
 - [x] 3-06 회원 가입
   - [x] 개선: `UserCreateForm`을 `record`와 `@NotBlank`로, 회원가입 MockMvc 테스트
 - [x] 3-07 로그인/로그아웃
+  - [x] 개선: 로그아웃을 CSRF 토큰이 있는 POST 폼으로, 로그인·로그아웃 테스트
 - [ ] 3-08 글쓴이
 - [ ] 3-09 수정/삭제
 - [ ] 3-10 추천
@@ -507,3 +508,9 @@
 - 작업: `SecurityConfig`에 `.logout(logoutRequestMatcher("/user/logout"), logoutSuccessUrl("/"), invalidateHttpSession(true))`, navbar는 `sec:authorize="isAnonymous()"`면 로그인, `isAuthenticated()`면 로그아웃 링크
 - 이유: 교재 3-07. 로그아웃도 시큐리티 필터가 처리한다(세션 무효화 후 메인으로). 타임리프 시큐리티 확장(`thymeleaf-extras-springsecurity6`, 061에서 추가)의 `sec:authorize`로 로그인 여부에 따라 태그를 보이거나 숨긴다
 - 결과: 비로그인 navbar `로그인`·`회원가입`, 로그인 후 `로그아웃`·`회원가입`, `GET /user/logout` → 302 `/` 후 다시 `로그인`. 교재와 차이: Security 7에서 `AntPathRequestMatcher`가 삭제되어 `PathPatternRequestMatcher.withDefaults().matcher("/user/logout")` 사용(교재처럼 GET 링크로 로그아웃됨). 확인 후 개발 DB 원래대로
+
+### 071 로그인/로그아웃, [개선] 로그아웃을 CSRF 토큰이 있는 POST로, 로그인·로그아웃 테스트
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/071)
+- 작업: `SecurityConfig` 로그아웃을 `logoutUrl("/user/logout")`(CSRF가 켜져 있으면 POST만)로, navbar 로그아웃 링크를 `th:action` POST 폼의 버튼으로. `UserLoginTest` 추가(로그인 성공·실패, navbar의 로그아웃 폼, POST 로그아웃, GET 로그아웃 무시)
+- 이유: 강사 14168 7강(GET은 조회용, 상태를 바꾸는 요청은 POST)과 46강(시큐리티는 POST에만 CSRF 토큰을 검사). GET 링크 로그아웃은 다른 사이트가 `<img src=".../user/logout">`만 넣어도 사용자를 로그아웃시킬 수 있다. POST + `th:action`이면 토큰이 자동으로 붙어 우리 화면에서 누른 요청만 처리된다
+- 결과: 테스트 31개 통과(070 설정으로 되돌리면 GET 로그아웃 테스트 실패 확인). 실제 실행에서 GET `/user/logout` 404(로그인 유지), 토큰 없는 POST 403, 토큰 있는 POST 302 `/` 후 비로그인. 확인 후 개발 DB 원래대로

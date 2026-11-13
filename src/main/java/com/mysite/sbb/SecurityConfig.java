@@ -10,7 +10,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
-import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -23,8 +22,8 @@ public class SecurityConfig {
 				.headers((headers) -> headers.addHeaderWriter(
 						new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
 				.formLogin((formLogin) -> formLogin.loginPage("/user/login").defaultSuccessUrl("/"))
-				.logout((logout) -> logout
-						.logoutRequestMatcher(PathPatternRequestMatcher.withDefaults().matcher("/user/logout"))
+				// CSRF 보호가 켜져 있으면 logoutUrl은 POST 요청만 로그아웃으로 처리한다
+				.logout((logout) -> logout.logoutUrl("/user/logout")
 						.logoutSuccessUrl("/").invalidateHttpSession(true));
 		return http.build();
 	}

@@ -3,6 +3,10 @@ spring:
     name: sbb
   profiles:
     active: dev
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true # 폼의 _method 파라미터(DELETE 등)를 실제 HTTP 메서드로 바꿔 준다
   jpa:
     hibernate:
       ddl-auto: update

@@ -149,3 +149,10 @@
 - 작업: `Answer.question`을 `@ManyToOne(fetch = FetchType.LAZY)`로, `Question.answerList`를 `new ArrayList<>()`로 초기화
 - 이유: 강사 14163 25강·21강. `@ManyToOne` 기본값 EAGER는 답변을 읽을 때마다 질문까지 함께 조회한다. 필요할 때만 읽도록 LAZY가 기본 선택. 리스트를 초기화하면 새 질문에서 `getAnswerList()`가 null이 아니다
 - 결과: 테스트 통과, 테이블 구조 변화 없음(조회 시점만 바뀜). LAZY 동작은 2-05 답변 조회에서 SQL 로그로 확인
+
+### 014 리포지터리, 시작 [교재] 리포지터리와 질문 저장 테스트
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/014)
+- 작업: `QuestionRepository`, `AnswerRepository`(`JpaRepository` 상속), SQL 로그 설정(`show_sql`, `format_sql`), `SbbApplicationTests.testJpa`에서 질문 2개 `save`
+- 이유: 교재 2-05. 리포지터리 인터페이스만 만들면 스프링 데이터 JPA가 구현체를 만들어 준다. 테스트로 DB에 데이터를 넣어 본다
+- 결과: 테스트 실행 1회 → 로그에 insert SQL 2번, 개발 DB `question`에 id 1·2 저장. 테스트가 개발 DB에 직접 데이터를 넣는다(다시 실행하면 같은 질문이 또 쌓인다)
+- 교재와 차이: 교재가 추가하는 `junit-jupiter`, `junit-platform-launcher`는 Boot 4 프로젝트에 이미 있음(`spring-boot-starter-webmvc-test`에 JUnit 포함)

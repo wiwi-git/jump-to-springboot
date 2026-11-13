@@ -3,6 +3,7 @@ package com.mysite.sbb.question;
 import java.security.Principal;
 
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.mysite.sbb.answer.AnswerForm;
 import com.mysite.sbb.user.SiteUser;
@@ -57,5 +59,32 @@ public class QuestionController {
 		SiteUser siteUser = this.userService.getUser(principal.getName());
 		this.questionService.create(questionForm.subject(), questionForm.content(), siteUser);
 		return "redirect:/question/list";
+	}
+
+	@PreAuthorize("isAuthenticated()")
+	@GetMapping("/modify/{id}")
+	public String questionModify(Model model, @PathVariable("id") Integer id, Principal principal) {
+		Question question = this.questionService.getQuestion(id);
+		if (!question.getAuthor().getUsername().equals(principal.getName())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+		}
+		// QuestionForm은 record(054)라 setter가 없다. 기존 값으로 새로 만들어 모델에 넣는다
+		model.addAttribute("questionForm", new QuestionForm(question.getSubject(), question.getContent()));
+		return "question_form";
+	}
+
+	@PreAuthorize("isAuthenticated()")
+	@PostMapping("/modify/{id}")
+	public String questionModify(@Valid QuestionForm questionForm, BindingResult bindingResult, Principal principal,
+			@PathVariable("id") Integer id) {
+		if (bindingResult.hasErrors()) {
+			return "question_form";
+		}
+		Question question = this.questionService.getQuestion(id);
+		if (!question.getAuthor().getUsername().equals(principal.getName())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+		}
+		this.questionService.modify(question, questionForm.subject(), questionForm.content());
+		return String.format("redirect:/question/detail/%s", id);
 	}
 }

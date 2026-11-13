@@ -42,6 +42,8 @@ public class Question {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private SiteUser author;
 
+	private LocalDateTime modifyDate;
+
 	public Answer addAnswer(String content, SiteUser author) {
 		Answer answer = new Answer();
 		answer.setContent(content);

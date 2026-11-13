@@ -539,3 +539,9 @@
 - 작업: 질문·답변 등록 시 글쓴이가 로그인 사용자(user1)로 저장되는지, 비로그인 등록 화면·등록 요청이 `/user/login`으로 가고 저장되지 않는지 MockMvc 테스트 추가
 - 이유: 다음 섹션의 수정·삭제 권한이 글쓴이에 기대므로 동작을 테스트로 고정한다(14163 35강). 14168 46강처럼 시큐리티는 단계별로 막는다: 토큰 없는 POST는 CSRF 필터가 403, 토큰은 있지만 비로그인이면 `@PreAuthorize`가 로그인 화면으로
 - 결과: 테스트 34개 통과. `@EnableMethodSecurity`를 빼면 비로그인 테스트 2개가 실패함을 확인
+
+### 076 수정/삭제, 시작 [교재] 글쓴이만 질문 수정
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/076)
+- 작업: `Question.modifyDate`, `QuestionService.modify`, `GET·POST /question/modify/{id}`(글쓴이가 아니면 400 "수정권한이 없습니다."), `question_form`은 action 없이 현재 URL로 전송하고 CSRF hidden input 직접 추가, 상세에 수정일시와 글쓴이에게만 보이는 수정 버튼
+- 이유: 교재 3-09. 버튼을 숨기는 것만으로는 URL 직접 접근을 막지 못하므로 서버에서 글쓴이와 로그인 사용자를 비교한다. 등록·수정이 같은 폼을 쓰도록 action을 비운다. 교재와 차이: 폼이 record라 setter 대신 `new QuestionForm(subject, content)`를 모델에 넣음
+- 결과: 테스트 34개 통과. 글쓴이 user1만 수정 버튼이 보이고 수정 폼에 기존 값이 채워짐, 수정 후 `modified at` 표시. user2의 수정 화면·수정 요청은 400. 확인 후 개발 DB 원래대로

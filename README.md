@@ -15,8 +15,8 @@
 
 ### 2장 기본 기능
 
-- [ ] 2-01 프로젝트 구조
-- [ ] 2-02 간단한 웹 프로그램
+- [x] 2-01 프로젝트 구조
+- [x] 2-02 간단한 웹 프로그램
 - [ ] 2-03 JPA
   - [ ] 개선: application.yml 전환, dev 프로필 H2 파일 DB(`./db_dev`, MySQL 모드), `.gitignore`에 DB 파일 추가
 - [ ] 2-04 엔티티
@@ -104,3 +104,9 @@
 - 작업: `HelloLombok` 필드를 `final`로 바꾸고 `@Setter` 대신 `@RequiredArgsConstructor`
 - 이유: 교재 1-04. final 필드를 받는 생성자를 롬복이 만들게 한다 (뒤에서 의존성 주입에 이 방식을 쓴다)
 - 결과: `new HelloLombok("헬로", 5)` 실행 시 `헬로`, `5` 출력, `javap`로 `HelloLombok(String, int)` 생성자 확인, setter와 기본 생성자는 사라짐
+
+### 007 간단한 웹 프로그램, 완료 [교재] MainController로 /sbb 응답
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/007)
+- 작업: `MainController`에 `@GetMapping("/sbb")` + `@ResponseBody`로 환영 문자열 반환. 코드 변경이 없는 2-01(프로젝트 구조)도 진행 현황에 체크
+- 이유: 교재 2-02. 요청 → 컨트롤러 → 응답 흐름을 직접 만들어 본다
+- 결과: `@ResponseBody` 없이 `void`로 두면 `/sbb` → 500, 문자열을 반환하게 고친 뒤 `/sbb` → 200, `안녕하세요 sbb에 오신 것을 환영합니다.`

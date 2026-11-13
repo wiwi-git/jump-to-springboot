@@ -9,6 +9,7 @@
 
 ### 1장 개발 준비
 
+- [x] 1-02 개발 환경 준비 (프로젝트 생성)
 - [ ] 1-03 스프링부트 맛보기
 - [ ] 1-04 도구 설치
 
@@ -66,3 +67,10 @@
 - 작업: AI 작업 규칙, 용어집, 버전 결정 기록, 진행 현황표 작성
 - 이유: 어느 세션의 AI든 같은 규칙과 같은 용어로 진행하도록
 - 결과: GitHub 저장소 생성, 태그 000 링크 접속 확인
+
+### 001 스프링부트 맛보기, 시작 [교재] 프로젝트 생성
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/001)
+- 작업: start.spring.io로 프로젝트 생성 (Spring Boot 4.1.2, Java 25, Gradle Kotlin DSL, `com.mysite.sbb`, Spring Web)
+- 이유: 교재 1-02의 sbb 프로젝트를 강사 환경 버전으로 준비 (ADR 0001)
+- 결과: 기본 테스트 통과, 서버 실행 후 `localhost:8080`에서 404 Whitelabel 페이지 확인
+- 교재와 차이: Boot 4에서 `spring-boot-starter-web` → `spring-boot-starter-webmvc`로 이름 변경

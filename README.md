@@ -300,3 +300,9 @@
 - 작업: `question_detail.html`에 `<form th:action="@{|/answer/create/${question.id}|}" method="post">`, `textarea name="content"`, 답변등록 버튼
 - 이유: 교재 2-12. 답변 내용을 `POST /answer/create/{질문id}`로 보낼 입력 폼을 먼저 만든다. 폼 필드의 `name`이 서버에서 받을 파라미터 이름이 된다
 - 결과: 상세 페이지에 `action="/answer/create/2"` 폼 표시. 아직 처리 컨트롤러가 없어 POST → 404
+
+### 038 답변 기능, [교재] AnswerController와 AnswerService로 답변 저장
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/038)
+- 작업: `AnswerController`(`@RequestMapping("/answer")`, `@PostMapping("/create/{id}")`, `@RequestParam("content")`), `AnswerService.create(question, content)`가 `Answer`를 만들어 `answerRepository.save`, 저장 후 상세 페이지로 리다이렉트
+- 이유: 교재 2-12. 폼이 보낸 `content` 파라미터를 `@RequestParam`으로 받고, 답변 저장은 서비스에 맡긴다. 저장 뒤 리다이렉트하면 새로고침해도 POST가 다시 전송되지 않는다
+- 결과: `POST /answer/create/2` → 302 `/question/detail/2`, 개발 DB `answer`에 2번 질문의 답변이 한 줄 추가됨(확인 후 개발 DB 원래대로 되돌림). 없는 질문 999 → 404

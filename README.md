@@ -70,6 +70,7 @@
 - [x] 3-11 앵커
 - [x] 3-12 마크다운
 - [x] 3-13 검색
+  - [x] 개선: 검색 대상·distinct·검색어 유지를 테스트로 확인
 - [ ] 3-14 도전과제 (작업자가 요청할 때 진행)
   - [ ] 답변 페이징과 정렬
   - [ ] 댓글
@@ -626,3 +627,9 @@
 - 작업: `QuestionRepository.findAllByKeyword`(@Query JPQL: 엔티티 조인 + `like %:kw%` 다섯 조건 or, distinct), `getList`가 이것을 사용. Specification `search`는 교재처럼 남겨 둠
 - 이유: 교재 3-13. 같은 검색을 JPQL로 쓰면 쿼리가 한눈에 보인다. 조건이 고정이면 @Query, 상황에 따라 조립하면 Specification. `Pageable`로 정렬·페이징·count는 스프링 데이터가 붙인다
 - 결과: 테스트 49개 통과. SQL 로그에 JPQL과 변환된 SQL, 검색 결과는 087(Specification)과 같음. 확인 후 개발 DB 원래대로
+
+### 090 검색, [개선] 검색을 테스트로 확인
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/090)
+- 작업: `QuestionSearchTest` 추가(다섯 검색 대상 각각, 없는 말 0건, 답변 2개가 걸려도 질문 1건, 빈 검색어는 글쓴이 없는 질문까지 전체, 목록 화면에서 검색어 유지)
+- 이유: 14163 15~19강·25강처럼 리포지터리 쿼리를 테스트 DB에서 롤백 테스트로 확인한다. 검색은 join과 or 조건이 많아 화면만으로는 실수를 알아채기 어렵다. distinct는 count 쿼리에서만 드러나므로 페이지 크기 1로 확인한다
+- 결과: 테스트 53개 통과. `distinct`를 빼면 count가 2가 되어 실패함을 확인

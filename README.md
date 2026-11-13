@@ -65,7 +65,7 @@
 - [x] 3-09 수정/삭제
   - [x] 개선: 삭제를 CSRF 토큰이 있는 DELETE 요청으로(hiddenmethod 필터), 수정·삭제 권한 테스트
   - [x] 개선: 답변 삭제를 `Question.deleteAnswer`와 `orphanRemoval`로
-- [ ] 3-10 추천
+- [x] 3-10 추천
 - [ ] 3-11 앵커
 - [ ] 3-12 마크다운
 - [ ] 3-13 검색
@@ -583,3 +583,9 @@
 - 작업: `Question`에 `@ManyToMany Set<SiteUser> voter`, `QuestionService.vote`, `GET /question/vote/{id}`(로그인 필요), 상세에 추천 버튼·추천 수 배지와 확인 후 이동하는 스크립트
 - 이유: 교재 3-10. 질문과 추천인은 다대다라 `question_voter` 연결 테이블이 생긴다. `Set`이라 같은 사람이 여러 번 추천해도 한 번만 센다. 교재와 차이: 013 개선처럼 `voter`를 `new HashSet<>()`으로 초기화
 - 결과: 테스트 44개 통과. 비로그인 추천은 로그인 화면으로, user1 두 번 + user2 한 번 추천 → 추천 수 2. 확인 후 개발 DB 원래대로
+
+### 083 추천, 완료 [교재] 답변 추천
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/083)
+- 작업: `Answer`에 `@ManyToMany Set<SiteUser> voter`, `AnswerService.vote`, `GET /answer/vote/{id}`(로그인 필요), 상세의 답변마다 추천 버튼과 추천 수 배지
+- 이유: 교재 3-10. 답변 추천도 질문 추천과 같은 다대다 구조(`answer_voter` 연결 테이블). 같은 `recommend` 클래스로 082의 확인 스크립트를 재사용한다. 교재와 차이: `voter` 빈 Set 초기화
+- 결과: 테스트 44개 통과. 비로그인 추천은 로그인 화면으로, user1 두 번 + user2 한 번 → 답변 추천 수 2. 확인 후 개발 DB 원래대로

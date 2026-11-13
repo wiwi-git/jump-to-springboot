@@ -26,7 +26,7 @@
   - [x] 개선: `QuestionRepositoryTest`로 단계별 테스트를 모두 남기고 `@Transactional` 롤백으로 서로 독립
   - [x] 개선: `Question.addAnswer`와 `cascade = PERSIST`로 질문 쪽에서 답변 생성
   - [x] 개선: SQL 로그에 바인딩 값·조회 값·트랜잭션 시작/종료 출력
-- [ ] 2-06 도메인별 분류
+- [x] 2-06 도메인별 분류
 - [ ] 2-07 질문 목록
 - [ ] 2-08 루트 URL
 - [ ] 2-09 서비스
@@ -213,3 +213,9 @@
 - 작업: `use_sql_comments: true`, 로그 레벨 `org.hibernate.orm.jdbc.bind`·`extract`·`org.springframework.transaction.interceptor`를 TRACE
 - 이유: 강사 14163 6강. 교재 설정(`show_sql`)은 SQL을 `?`로만 보여 준다. 실제로 어떤 값이 들어가고 나왔는지, 트랜잭션이 언제 열리고 닫히는지 봐야 JPA 동작을 이해하기 쉽다
 - 결과: 테스트 로그에 `binding parameter (1:VARCHAR) <- [sbb에 대해서 알고 싶습니다.]`, `extracted value (1:INTEGER) -> [1]`, `Getting/Completing transaction for [...SimpleJpaRepository.count]`
+
+### 024 도메인별 분류, 완료 [교재] question·answer 패키지로 나누기
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/024)
+- 작업: `Question`·`QuestionRepository` → `com.mysite.sbb.question`, `Answer`·`AnswerRepository` → `com.mysite.sbb.answer`, 사용하는 곳에 import 추가
+- 이유: 교재 2-06. 파일이 늘어도 기능(도메인) 단위로 찾을 수 있게 패키지를 나눈다
+- 결과: 테스트 11개 통과, 서버 정상 기동, 개발 DB 테이블(QUESTION, ANSWER) 그대로

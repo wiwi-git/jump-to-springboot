@@ -46,6 +46,7 @@
   - [x] 개선: `layout:title-pattern`으로 페이지별 제목
 - [x] 2-16 질문 등록
   - [x] 개선: `@NotEmpty` → `@NotBlank`, 질문·답변 등록 검증 테스트
+  - [x] 개선: 폼 클래스를 `record`로 (setter 없는 불변 객체)
 
 ### 3장 SBB 서비스 개발
 
@@ -402,3 +403,9 @@
 - 작업: `QuestionForm`, `AnswerForm`의 `@NotEmpty`를 `@NotBlank`로, 질문 등록·답변 등록 MockMvc 테스트 추가(정상 저장, 공백만 입력 시 거부, 제목 201자 거부)
 - 이유: 강사 14168은 폼 검증에 `@NotBlank`를 쓴다. `@NotEmpty`는 길이 0만 막아서 051 검증에서 `"   "` 제목이 그대로 저장되었다. `@NotBlank`는 공백을 뺀 내용이 없으면 거부한다
 - 결과: 테스트 19개 통과. `@NotEmpty`로 잠시 되돌리면 공백 입력 테스트가 실패하는 것도 확인. 실제 실행에서 공백만 보낸 질문 → 폼에 두 오류, 목록 1행 그대로
+
+### 054 질문 등록, [개선] QuestionForm·AnswerForm을 record로
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/054)
+- 작업: 두 폼을 `@Getter @Setter` 클래스에서 `record`로 바꾸고, 컨트롤러는 `questionForm.subject()`·`answerForm.content()`로 읽음. 폼 GET과 입력값 유지 테스트(t6) 추가
+- 이유: 강사 14168 40강. 폼은 요청 데이터를 담아 전달만 하는 객체라 setter가 필요 없다. record는 생성자·접근자·equals/hashCode/toString을 만들어 주고 필드가 final이라 코드가 짧고 바뀌지 않는다. 스프링은 record를 생성자 바인딩으로 만든다
+- 결과: 테스트 20개 통과. 실제 실행에서 빈 폼 `value=""`, 검증 실패 시 `value="제목만 입력"` 유지, 정상 등록 302, 빈 답변 오류 표시(확인 후 개발 DB 원래대로)

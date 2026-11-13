@@ -29,7 +29,7 @@ public class AnswerController {
 			model.addAttribute("question", question);
 			return "question_detail";
 		}
-		this.answerService.create(question, answerForm.getContent());
+		this.answerService.create(question, answerForm.content());
 		return String.format("redirect:/question/detail/%s", id);
 	}
 }

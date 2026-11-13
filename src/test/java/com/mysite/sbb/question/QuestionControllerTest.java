@@ -115,4 +115,24 @@ class QuestionControllerTest {
 				.andExpect(view().name("question_form"))
 				.andExpect(model().attributeHasFieldErrorCode("questionForm", "subject", "Size"));
 	}
+
+	@Test
+	@DisplayName("질문 등록 폼: GET이면 빈 폼, 검증에 실패하면 입력한 값을 다시 채워 줌")
+	void t6() throws Exception {
+		mvc
+				.perform(get("/question/create"))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(view().name("question_form"))
+				.andExpect(content().string(containsString("name=\"subject\" value=\"\"")));
+
+		mvc
+				.perform(post("/question/create")
+						.param("subject", "제목만 입력")
+						.param("content", ""))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(view().name("question_form"))
+				.andExpect(content().string(containsString("value=\"제목만 입력\"")));
+	}
 }

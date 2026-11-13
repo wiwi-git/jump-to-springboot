@@ -20,6 +20,7 @@
 - [x] 2-03 JPA
   - [x] 개선: application.yml 전환, dev 프로필 H2 파일 DB(`./db_dev`, MySQL 모드), `.gitignore`에 DB 파일 추가
 - [x] 2-04 엔티티
+  - [x] 개선: `@ManyToOne(fetch = LAZY)`, `answerList`를 빈 리스트로 초기화
 - [ ] 2-05 리포지터리
   - [ ] 개선: test 프로필 H2 메모리 DB로 테스트 DB 분리
 - [ ] 2-06 도메인별 분류
@@ -142,3 +143,9 @@
 - 작업: `@Entity Answer` (`@ManyToOne Question question`), `Question.answerList`에 `@OneToMany(mappedBy = "question", cascade = REMOVE)`
 - 이유: 교재 2-04. 답변 N개가 질문 1개에 속하는 관계를 객체 참조로 표현한다
 - 결과: ANSWER 테이블에 QUESTION_ID 컬럼과 외래키 생성, QUESTION 테이블에는 답변용 컬럼이 생기지 않음(mappedBy 쪽은 컬럼 없음)
+
+### 013 엔티티, [개선] @ManyToOne LAZY와 answerList 빈 리스트 초기화
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/013)
+- 작업: `Answer.question`을 `@ManyToOne(fetch = FetchType.LAZY)`로, `Question.answerList`를 `new ArrayList<>()`로 초기화
+- 이유: 강사 14163 25강·21강. `@ManyToOne` 기본값 EAGER는 답변을 읽을 때마다 질문까지 함께 조회한다. 필요할 때만 읽도록 LAZY가 기본 선택. 리스트를 초기화하면 새 질문에서 `getAnswerList()`가 null이 아니다
+- 결과: 테스트 통과, 테이블 구조 변화 없음(조회 시점만 바뀜). LAZY 동작은 2-05 답변 조회에서 SQL 로그로 확인

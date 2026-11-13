@@ -38,7 +38,7 @@
 - [x] 2-12 답변 기능
   - [x] 개선: 답변 생성을 `Question.addAnswer`와 `@Transactional`로 (`answerRepository.save` 대신)
 - [x] 2-13 웹 페이지 디자인
-- [ ] 2-14 부트스트랩
+- [x] 2-14 부트스트랩
 - [ ] 2-15 표준 HTML 구조
 - [ ] 2-16 질문 등록
 
@@ -331,3 +331,9 @@
 - 작업: `static/bootstrap.min.css`(Bootstrap 5.3.2, 교재 저장소 파일), `question_list.html`을 `container`·`table`·`table-dark`로 꾸미고 번호 칸(`loop.count`), 작성일시는 `#temporals.format(..., "yyyy-MM-dd HH:mm")`
 - 이유: 교재 2-14. 부트스트랩의 클래스만 붙여 CSS를 직접 쓰지 않고 화면을 꾸민다. 반복 상태 변수(`loop`)로 번호를 매기고, 날짜는 읽기 좋은 형식으로 바꾼다
 - 결과: `/bootstrap.min.css` → 200 `text/css`(232,948바이트), 목록에 번호 `1`, 작성일시 `2026-11-13 12:32`
+
+### 043 부트스트랩, 완료 [교재] 질문 상세를 카드 레이아웃으로 꾸미기
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/043)
+- 작업: `question_detail.html`을 부트스트랩으로 변경: 질문·답변을 `card`로, 작성일시 배지(`#temporals.format`), 내용은 `white-space: pre-line`, 폼은 `form-control`·`btn btn-primary`. `style.css` 링크는 빠짐
+- 이유: 교재 2-14. 상세 화면도 목록과 같은 부트스트랩 스타일로 맞춘다. `pre-line`은 내용의 줄바꿈을 화면에 그대로 보여 준다
+- 결과: 상세 페이지에 `card my-3` 2개(질문, 답변 1개), 날짜 `2026-11-13 12:32`, `btn btn-primary` 답변등록 버튼

@@ -41,7 +41,7 @@
 - [x] 2-14 부트스트랩
   - [x] 개선: 부트스트랩을 cdnjs(5.3.8)에서 불러오기
   - [x] 개선: 프리텐다드 웹폰트 적용
-- [ ] 2-15 표준 HTML 구조
+- [x] 2-15 표준 HTML 구조
 - [ ] 2-16 질문 등록
 
 ### 3장 SBB 서비스 개발
@@ -357,3 +357,9 @@
 - 작업: `templates/layout.html`(doctype·head·body, 부트스트랩·style.css 링크, `<th:block layout:fragment="content">`), `question_list.html`을 `<html layout:decorate="~{layout}">` + `<div layout:fragment="content">`로 변경
 - 이유: 교재 2-15. 지금까지 템플릿은 `<html>`·`<head>`·`<body>`가 없는 조각이었다. 공통 뼈대를 `layout.html` 하나에 두고, 각 페이지는 바뀌는 본문만 채운다(thymeleaf-layout-dialect, 026에서 추가)
 - 결과: `/question/list` 응답이 `<!doctype html>`로 시작, head에 cdnjs 부트스트랩·`/style.css`, 제목 `Hello, sbb!`, 목록 3칸 그대로. 교재와 차이: 레이아웃의 부트스트랩도 044 개선대로 cdnjs 링크
+
+### 047 표준 HTML 구조, 완료 [교재] 질문 상세에 레이아웃 적용
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/047)
+- 작업: `question_detail.html`도 `layout:decorate="~{layout}"` + `layout:fragment="content"`로 바꾸고 개별 CSS 링크 제거
+- 이유: 교재 2-15. 상세 페이지도 공통 레이아웃을 쓰면 head(CSS, 제목)를 고칠 때 layout.html 한 곳만 바꾸면 된다
+- 결과: `/question/detail/2` 응답이 `<!doctype html>`, `<title>Hello, sbb!</title>`, `/style.css` 링크 1개, 질문·답변 카드 그대로

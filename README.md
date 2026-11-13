@@ -23,6 +23,7 @@
   - [x] 개선: `@ManyToOne(fetch = LAZY)`, `answerList`를 빈 리스트로 초기화
 - [x] 2-05 리포지터리
   - [x] 개선: test 프로필 H2 메모리 DB로 테스트 DB 분리
+  - [x] 개선: `QuestionRepositoryTest`로 단계별 테스트를 모두 남기고 `@Transactional` 롤백으로 서로 독립
 - [ ] 2-06 도메인별 분류
 - [ ] 2-07 질문 목록
 - [ ] 2-08 루트 URL
@@ -192,3 +193,9 @@
 - 작업: `application-test.yml`(`jdbc:h2:mem:db_test;MODE=MySQL`), 테스트 클래스에 `@ActiveProfiles("test")`, test 프로필에서만 샘플 데이터(질문 2개, 2번 질문의 답변 1개)를 넣는 `TestInitData`
 - 이유: 강사 14163 5강·14강. 교재 방식은 테스트가 개발 DB를 함께 써서 테스트가 개발 데이터를 바꾸고, 결과가 개발 DB 상태에 따라 달라진다(017 삭제 테스트는 두 번째 실행에서 실패). 테스트 DB는 테스트할 때만 만들어지고 끝나면 사라진다
 - 결과: 테스트 로그 `profile is active: "test"`, `url=jdbc:h2:mem:db_test`, 2번 연속 실행 모두 통과. 실행 전후 개발 DB는 질문 1건·답변 1건 그대로
+
+### 021 리포지터리, [개선] QuestionRepositoryTest와 @Transactional 롤백으로 독립적인 테스트
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/021)
+- 작업: `SbbApplicationTests` → `QuestionRepositoryTest`로 이름 변경, 교재 2-05의 단계(조회 5개, 수정, 삭제, 답변 생성·조회·목록) 10개를 `@DisplayName` 붙은 메서드로 모두 남김, 클래스에 `@Transactional`, AssertJ `assertThat`
+- 이유: 강사 14163 15~25강. 교재는 testJpa 하나를 지우고 고쳐 가며 써서 지난 단계가 남지 않는다. 테스트 메서드마다 트랜잭션을 열고 끝나면 롤백하면 수정·삭제·생성 테스트가 다른 테스트에 영향을 주지 않는다
+- 결과: 10개 통과(2번 실행). "답변 생성"이 먼저 실행돼도 "답변 목록 조회"는 1개 → 롤백 확인. 클래스 `@Transactional`을 빼면 LAZY 목록 조회가 `LazyInitializationException`으로 실패

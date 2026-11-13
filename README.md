@@ -66,6 +66,7 @@
   - [x] 개선: 삭제를 CSRF 토큰이 있는 DELETE 요청으로(hiddenmethod 필터), 수정·삭제 권한 테스트
   - [x] 개선: 답변 삭제를 `Question.deleteAnswer`와 `orphanRemoval`로
 - [x] 3-10 추천
+  - [x] 개선: 추천을 CSRF 토큰이 있는 POST 요청으로, 추천 테스트
 - [ ] 3-11 앵커
 - [ ] 3-12 마크다운
 - [ ] 3-13 검색
@@ -589,3 +590,9 @@
 - 작업: `Answer`에 `@ManyToMany Set<SiteUser> voter`, `AnswerService.vote`, `GET /answer/vote/{id}`(로그인 필요), 상세의 답변마다 추천 버튼과 추천 수 배지
 - 이유: 교재 3-10. 답변 추천도 질문 추천과 같은 다대다 구조(`answer_voter` 연결 테이블). 같은 `recommend` 클래스로 082의 확인 스크립트를 재사용한다. 교재와 차이: `voter` 빈 Set 초기화
 - 결과: 테스트 44개 통과. 비로그인 추천은 로그인 화면으로, user1 두 번 + user2 한 번 → 답변 추천 수 2. 확인 후 개발 DB 원래대로
+
+### 084 추천, [개선] 추천을 CSRF 토큰이 있는 POST 요청으로, 추천 테스트
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/084)
+- 작업: 질문·답변 추천을 `@PostMapping`으로, 상세의 추천 버튼을 `th:action` POST 폼(`onsubmit` 확인 창)으로. `VoteTest` 추가(중복 추천 한 번만, 질문·답변 추천 분리, GET 405, 토큰 없음 403, 비로그인은 로그인 화면)
+- 이유: 080 삭제와 같은 근거(14168 7강 GET은 조회용, 46강 GET은 CSRF 검사 밖). 교재의 GET 추천은 다른 사이트의 `<img>` 태그로도 눌린다
+- 결과: 테스트 49개 통과. 실제 실행에서 GET 추천 405, 토큰 없는 POST 403, 토큰 있는 POST 302 후 추천 수 1. 확인 후 개발 DB 원래대로

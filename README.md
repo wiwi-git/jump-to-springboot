@@ -32,7 +32,7 @@
   - [x] 개선: 개발 DB가 비어 있으면 `TestInitData` 샘플 데이터 생성
 - [x] 2-08 루트 URL
 - [x] 2-09 서비스
-- [ ] 2-10 상세 페이지
+- [x] 2-10 상세 페이지
 - [ ] 2-11 URL 프리픽스
 - [ ] 2-12 답변 기능
 - [ ] 2-13 웹 페이지 디자인
@@ -275,3 +275,9 @@
 - 작업: `question_list.html`의 제목을 `<a th:href="@{|/question/detail/${question.id}|}">`로 감쌈
 - 이유: 교재 2-10. 목록에서 제목을 누르면 그 질문의 상세 페이지로 가게 한다. `@{...}`는 URL을 만들고, `|...|`는 문자열 안에 `${}` 값을 끼워 넣는다
 - 결과: 목록에 `<a href="/question/detail/2">` 링크 생성. 아직 매핑이 없어 `/question/detail/2` → 404
+
+### 034 상세 페이지, 완료 [교재] 질문 상세 매핑과 없는 질문은 404
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/034)
+- 작업: `/question/detail/{id}` 매핑(`@PathVariable`), `QuestionService.getQuestion(id)`, 없는 id면 `DataNotFoundException`(`@ResponseStatus(NOT_FOUND)`), `question_detail.html`에 제목·내용 출력
+- 이유: 교재 2-10. URL 경로의 값을 `@PathVariable`로 받아 질문을 조회한다. 질문이 없을 때 `Optional.get()`의 500(`No value present`) 대신 404와 `question not found`라는 뜻이 분명한 예외를 낸다
+- 결과: `/question/detail/2` → 200, 제목·내용 표시. `/question/detail/999` → 404, `message: entity not found`, 예외 `DataNotFoundException: question not found`

@@ -21,7 +21,7 @@
   - [x] 개선: application.yml 전환, dev 프로필 H2 파일 DB(`./db_dev`, MySQL 모드), `.gitignore`에 DB 파일 추가
 - [x] 2-04 엔티티
   - [x] 개선: `@ManyToOne(fetch = LAZY)`, `answerList`를 빈 리스트로 초기화
-- [ ] 2-05 리포지터리
+- [x] 2-05 리포지터리
   - [ ] 개선: test 프로필 H2 메모리 DB로 테스트 DB 분리
 - [ ] 2-06 도메인별 분류
 - [ ] 2-07 질문 목록
@@ -180,3 +180,9 @@
 - 작업: `findById(2)` 질문을 `answer.setQuestion(q)`로 연결해 `AnswerRepository.save`
 - 이유: 교재 2-05. 답변은 어떤 질문의 답변인지 `Question` 객체로 연결한다
 - 결과: 1회 실행 통과, 개발 DB `answer`에 id 1, `QUESTION_ID` 2 저장
+
+### 019 리포지터리, 완료 [교재] 답변 조회와 질문에 연결된 답변 목록, @Transactional
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/019)
+- 작업: `testAnswerFind`(답변 1의 질문 id가 2), `testJpa`(질문 2의 `getAnswerList()` 1개) + `@Transactional`
+- 이유: 교재 2-05. `answerList`는 필요할 때 읽는 LAZY 컬렉션이라, DB 세션(트랜잭션)이 열려 있어야 꺼낼 수 있다
+- 결과: `@Transactional` 없이 실행 → `LazyInitializationException ... answerList (no session)` 실패, 붙인 뒤 2개 통과. 답변 조회 SQL은 answer만 읽고 question은 조인하지 않음(013의 LAZY 확인). 모든 기대값은 개발 DB에 쌓인 데이터(014~018 실행 결과)에 의존한다

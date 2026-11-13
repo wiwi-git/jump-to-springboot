@@ -50,7 +50,7 @@
 
 ### 3장 SBB 서비스 개발
 
-- [ ] 3-01 내비게이션 바
+- [x] 3-01 내비게이션 바
 - [ ] 3-02 페이징
 - [ ] 3-03 게시물 번호
 - [ ] 3-04 답변 개수
@@ -409,3 +409,9 @@
 - 작업: 두 폼을 `@Getter @Setter` 클래스에서 `record`로 바꾸고, 컨트롤러는 `questionForm.subject()`·`answerForm.content()`로 읽음. 폼 GET과 입력값 유지 테스트(t6) 추가
 - 이유: 강사 14168 40강. 폼은 요청 데이터를 담아 전달만 하는 객체라 setter가 필요 없다. record는 생성자·접근자·equals/hashCode/toString을 만들어 주고 필드가 final이라 코드가 짧고 바뀌지 않는다. 스프링은 record를 생성자 바인딩으로 만든다
 - 결과: 테스트 20개 통과. 실제 실행에서 빈 폼 `value=""`, 검증 실패 시 `value="제목만 입력"` 유지, 정상 등록 302, 빈 답변 오류 표시(확인 후 개발 DB 원래대로)
+
+### 055 내비게이션 바, 완료 [교재] navbar 조각과 부트스트랩 JS
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/055)
+- 작업: `templates/navbar.html`(`th:fragment="navbarFragment"`, SBB 로고·로그인 링크·햄버거 버튼), `layout.html` body 맨 위에 `<nav th:replace="~{navbar :: navbarFragment}">`, body 끝에 부트스트랩 JS
+- 이유: 교재 3-01. 모든 페이지 위에 같은 메뉴를 두려면 레이아웃에 한 번만 넣으면 된다. 좁은 화면에서 햄버거 버튼으로 메뉴를 펼치는 동작(collapse)은 부트스트랩 JS가 처리한다
+- 결과: 목록·상세 모두 `<nav class="navbar ...">`와 `SBB`, `로그인` 링크 포함. 교재와 차이: 부트스트랩 JS도 044 개선대로 cdnjs 5.3.8에서 불러옴(로컬 `bootstrap.min.js` 없음)

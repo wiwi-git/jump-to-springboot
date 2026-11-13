@@ -608,3 +608,9 @@
 - 작업: `commonmark:0.21.0` 의존성, `CommonUtil.markdown`(@Component), 상세에서 질문·답변 내용을 `@commonUtil.markdown(...)`으로 변환해 `th:utext`로 출력
 - 이유: 교재 3-12. 마크다운으로 쓴 글을 HTML로 보여 준다. 변환 결과가 HTML이라 이스케이프하지 않는 `th:utext`를 쓴다. 교재와 차이: 타임리프 3.1.5는 `th:utext` 안의 식을 제한 모드로 평가해 교재 식이 예외(상세 500)가 나므로, `th:with`에서 변환해 변수에 담고 `th:utext`는 변수만 출력
 - 결과: 테스트 49개 통과. `# 제목` → `<h1>`, `* 항목` → `<ul><li>`, `**굵게**` → `<strong>`. 본문에 쓴 HTML 태그도 그대로 출력됨(교재 기본 동작). 확인 후 개발 DB 원래대로
+
+### 087 검색, 시작 [교재] JPA Specification으로 제목·내용·글쓴이·답변 검색
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/087)
+- 작업: `QuestionService.search(kw)`(Specification: 글쓴이·답변·답변 글쓴이를 left join, distinct, 다섯 항목 like를 or), `getList(page, kw)`, 리포지터리 `findAll(Specification, Pageable)`, 목록 URL에 `kw` 파라미터
+- 이유: 교재 3-13. where 조건을 Criteria API로 조립한다. 답변을 join하면 질문이 답변 수만큼 늘어나 distinct가 필요하다. Spring Data JPA 4에서도 교재 코드가 그대로 동작
+- 결과: 테스트 49개 통과. 제목(사과)·답변 내용(바나나)·질문 작성자(user1)·답변 작성자(user2)로 각각 1건, 없는 말 0건, `kw`와 `page`가 함께 동작. 확인 후 개발 DB 원래대로

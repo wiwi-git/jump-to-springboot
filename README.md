@@ -40,6 +40,7 @@
 - [x] 2-13 웹 페이지 디자인
 - [x] 2-14 부트스트랩
   - [x] 개선: 부트스트랩을 cdnjs(5.3.8)에서 불러오기
+  - [x] 개선: 프리텐다드 웹폰트 적용
 - [ ] 2-15 표준 HTML 구조
 - [ ] 2-16 질문 등록
 
@@ -344,3 +345,9 @@
 - 작업: `static/bootstrap.min.css`(5.3.2) 삭제, 목록·상세 템플릿이 `https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap.min.css`를 링크
 - 이유: 강사 14163 39강. 프론트엔드 라이브러리는 내려받아 저장소에 넣지 않고 cdnjs URL로 쓴다. 23만 바이트짜리 압축 파일을 커밋하지 않아도 되고, 버전은 URL만 바꿔 올린다
 - 결과: 테스트 15개 통과, 두 화면 모두 cdnjs 링크, cdnjs URL → 200 `text/css`(Bootstrap v5.3.8), `/bootstrap.min.css` → 404(로컬 파일 제거)
+
+### 045 부트스트랩, [개선] 프리텐다드 폰트 적용
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/045)
+- 작업: `style.css`에 Pretendard `@font-face`(100~900, jsDelivr woff2)와 `html > body { font-family: Pretendard }` 추가(교재의 textarea·submit 규칙은 유지), 목록·상세 템플릿에 `style.css` 링크
+- 이유: 강사 14163 39강의 커스터마이징. 부트스트랩 기본 글꼴은 OS마다 달라 한글 화면이 제각각이다. 한글용 웹폰트를 지정해 어느 환경에서나 같은 모양으로 보이게 한다
+- 결과: 브라우저에서 상세 페이지 `body` 글꼴 `Pretendard`, 400·500·700 굵기 로드 확인, 부트스트랩 버튼 색(rgb(13,110,253)) 정상

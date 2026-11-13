@@ -42,6 +42,7 @@
   - [x] 개선: 부트스트랩을 cdnjs(5.3.8)에서 불러오기
   - [x] 개선: 프리텐다드 웹폰트 적용
 - [x] 2-15 표준 HTML 구조
+  - [x] 개선: 템플릿에 `xmlns:th`·`xmlns:layout` 선언 (IDE 경고 제거)
 - [ ] 2-16 질문 등록
 
 ### 3장 SBB 서비스 개발
@@ -363,3 +364,9 @@
 - 작업: `question_detail.html`도 `layout:decorate="~{layout}"` + `layout:fragment="content"`로 바꾸고 개별 CSS 링크 제거
 - 이유: 교재 2-15. 상세 페이지도 공통 레이아웃을 쓰면 head(CSS, 제목)를 고칠 때 layout.html 한 곳만 바꾸면 된다
 - 결과: `/question/detail/2` 응답이 `<!doctype html>`, `<title>Hello, sbb!</title>`, `/style.css` 링크 1개, 질문·답변 카드 그대로
+
+### 048 표준 HTML 구조, [개선] 템플릿에 th·layout 네임스페이스 선언
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/048)
+- 작업: `layout.html`, `question_list.html`, `question_detail.html`의 `<html>`에 `xmlns:th="http://www.thymeleaf.org"`, `xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"`
+- 이유: 강사 14168 44강. 선언이 없으면 IDE가 `layout:decorate`, `th:text`마다 `Namespace 'layout' is not bound` 경고를 띄우고 자동완성도 안 된다. 실행에는 영향이 없고, 렌더링 결과에서는 타임리프가 선언을 지운다
+- 결과: 테스트 15개 통과, 목록·상세 200, 응답의 `<html lang="ko">`에 xmlns 속성이 남지 않음

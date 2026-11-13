@@ -56,7 +56,7 @@
 - [x] 3-04 답변 개수
 - [x] 3-05 스프링 시큐리티
   - [x] 개선: CSRF 토큰 자동 삽입과 토큰 없는 POST 403을 테스트로 확인
-- [ ] 3-06 회원 가입
+- [x] 3-06 회원 가입
 - [ ] 3-07 로그인/로그아웃
 - [ ] 3-08 글쓴이
 - [ ] 3-09 수정/삭제
@@ -476,3 +476,9 @@
 - 작업: `SecurityConfig`에 `PasswordEncoder` 빈(`BCryptPasswordEncoder`), `UserService.create(username, email, password)`는 `passwordEncoder.encode(password)`로 암호화해 저장
 - 이유: 교재 3-06. 비밀번호를 그대로 저장하면 DB가 유출될 때 모두 드러난다. BCrypt 해시로 저장하고, 암호화 방식은 빈 하나로 정해 두어 바꿀 때 한 곳만 고친다
 - 결과: 테스트 22개 통과, 서버가 `PasswordEncoder` 빈을 주입받아 정상 시작(화면 연결은 다음 커밋)
+
+### 066 회원 가입, 완료 [교재] 회원가입 폼·컨트롤러와 내비게이션 링크
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/066)
+- 작업: `UserCreateForm`(username `@Size(3~25)`, password1·password2, email `@Email`, 모두 `@NotEmpty`), `UserController`(`GET/POST /user/signup`), `signup_form.html`, navbar에 `회원가입` 링크
+- 이유: 교재 3-06. 질문 등록과 같은 폼 검증에 더해, 두 비밀번호가 다르면 `bindingResult.rejectValue`로 필드 오류를, DB 유니크 제약에 걸리면(`DataIntegrityViolationException`) `bindingResult.reject`로 전역 오류를 직접 넣어 같은 오류 상자에 보여 준다
+- 결과: 빈 값·짧은 ID·잘못된 이메일·비밀번호 불일치·중복 가입은 폼에 오류, 정상 가입은 302 `/`, DB에 `$2a$10$...`(BCrypt 60자)로 저장. 공백만 입력한 ID·비밀번호도 가입됨(@NotEmpty의 한계, 053과 같은 문제). 교재와 차이: `signup_form.html`에 048·049처럼 xmlns와 `<title>회원가입</title>`. 확인 후 개발 DB 원래대로

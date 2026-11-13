@@ -377,3 +377,9 @@
 - 작업: `layout.html`의 `<title>`을 `layout:title-pattern="$CONTENT_TITLE | $LAYOUT_TITLE"`과 기본 제목 `SBB`로, 목록은 `<head><title>질문 목록</title></head>`, 상세는 질문 제목(`th:text="${question.subject}"`)
 - 이유: 강사 14168 44강 레이아웃. 교재 레이아웃은 모든 페이지 제목이 `Hello, sbb!`라 탭·방문 기록에서 페이지를 구분할 수 없다. 페이지는 자기 제목만 적고, 레이아웃이 사이트 이름을 붙인다
 - 결과: 목록 탭 제목 `질문 목록 | SBB`, 상세 `스프링부트 모델 질문입니다. | SBB`. 제목이 없는 페이지는 `SBB`만 나온다
+
+### 050 질문 등록, 시작 [교재] 질문 등록 버튼·폼과 QuestionService.create
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/050)
+- 작업: 목록 아래 `질문 등록하기` 버튼, `GET /question/create` → `question_form.html`(제목 input, 내용 textarea), `POST /question/create`에서 `@RequestParam`으로 받아 `QuestionService.create` 후 목록으로 리다이렉트
+- 이유: 교재 2-16. 같은 URL을 GET(폼 보여 주기)과 POST(폼 처리)로 나눠 매핑한다. 메서드 이름이 같아도 매개변수가 달라 오버로딩된다
+- 결과: 폼 등록 → 302 `/question/list`, 목록에 새 질문 행 추가. 빈 제목·내용도 그대로 저장됨(검증은 다음 커밋). 확인 후 개발 DB 원래대로

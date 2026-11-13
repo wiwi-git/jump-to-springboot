@@ -168,3 +168,9 @@
 - 작업: `findById(1)`로 가져온 질문의 제목을 `setSubject("수정된 제목")` 후 `save`
 - 이유: 교재 2-05. 이미 id가 있는 엔티티를 `save`하면 insert가 아니라 update가 실행된다
 - 결과: 로그에 `update question set ... where id=?`, 개발 DB id 1 제목이 `수정된 제목`으로 바뀜. 앞 커밋의 조회 테스트는 이제 개발 DB 상태와 맞지 않아 교재처럼 교체
+
+### 017 리포지터리, [교재] 질문 삭제 테스트
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/017)
+- 작업: `count()`가 2인지 확인 → `findById(1)` 질문 `delete` → `count()`가 1인지 확인
+- 이유: 교재 2-05. 리포지터리의 `delete`와 `count` 사용
+- 결과: 1회 실행 통과, 로그에 `delete from question where id=?`, 개발 DB에 id 2만 남음. 이 테스트는 한 번 더 돌리면 `count()`가 1이라 실패한다(개발 DB 공유의 문제)

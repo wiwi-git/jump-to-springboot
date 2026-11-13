@@ -325,3 +325,9 @@
 - 작업: `static/style.css`(textarea 너비 100%, 제출 버튼 위 여백), `question_detail.html` 첫 줄에 `<link th:href="@{/style.css}">`
 - 이유: 교재 2-13. `src/main/resources/static`의 파일은 컨트롤러 없이 `/파일명`으로 바로 제공된다. 화면 모양(CSS)을 템플릿과 분리한다
 - 결과: 상세 페이지에 `<link href="/style.css">`, `/style.css` → 200 `text/css`
+
+### 042 부트스트랩, 시작 [교재] bootstrap.min.css 추가와 질문 목록 꾸미기
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/042)
+- 작업: `static/bootstrap.min.css`(Bootstrap 5.3.2, 교재 저장소 파일), `question_list.html`을 `container`·`table`·`table-dark`로 꾸미고 번호 칸(`loop.count`), 작성일시는 `#temporals.format(..., "yyyy-MM-dd HH:mm")`
+- 이유: 교재 2-14. 부트스트랩의 클래스만 붙여 CSS를 직접 쓰지 않고 화면을 꾸민다. 반복 상태 변수(`loop`)로 번호를 매기고, 날짜는 읽기 좋은 형식으로 바꾼다
+- 결과: `/bootstrap.min.css` → 200 `text/css`(232,948바이트), 목록에 번호 `1`, 작성일시 `2026-11-13 12:32`

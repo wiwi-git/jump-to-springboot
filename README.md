@@ -57,6 +57,7 @@
 - [x] 3-05 스프링 시큐리티
   - [x] 개선: CSRF 토큰 자동 삽입과 토큰 없는 POST 403을 테스트로 확인
 - [x] 3-06 회원 가입
+  - [x] 개선: `UserCreateForm`을 `record`와 `@NotBlank`로, 회원가입 MockMvc 테스트
 - [ ] 3-07 로그인/로그아웃
 - [ ] 3-08 글쓴이
 - [ ] 3-09 수정/삭제
@@ -482,3 +483,9 @@
 - 작업: `UserCreateForm`(username `@Size(3~25)`, password1·password2, email `@Email`, 모두 `@NotEmpty`), `UserController`(`GET/POST /user/signup`), `signup_form.html`, navbar에 `회원가입` 링크
 - 이유: 교재 3-06. 질문 등록과 같은 폼 검증에 더해, 두 비밀번호가 다르면 `bindingResult.rejectValue`로 필드 오류를, DB 유니크 제약에 걸리면(`DataIntegrityViolationException`) `bindingResult.reject`로 전역 오류를 직접 넣어 같은 오류 상자에 보여 준다
 - 결과: 빈 값·짧은 ID·잘못된 이메일·비밀번호 불일치·중복 가입은 폼에 오류, 정상 가입은 302 `/`, DB에 `$2a$10$...`(BCrypt 60자)로 저장. 공백만 입력한 ID·비밀번호도 가입됨(@NotEmpty의 한계, 053과 같은 문제). 교재와 차이: `signup_form.html`에 048·049처럼 xmlns와 `<title>회원가입</title>`. 확인 후 개발 DB 원래대로
+
+### 067 회원 가입, [개선] UserCreateForm을 record와 @NotBlank로, 회원가입 테스트
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/067)
+- 작업: `UserCreateForm`을 `record`로 바꾸고 `@NotEmpty` → `@NotBlank`, 컨트롤러는 `userCreateForm.password1()` 등 접근자로 읽음. `UserControllerTest` 추가(정상 가입·암호화, 공백 입력, 비밀번호 불일치, 중복 ID)
+- 이유: 053·054와 같은 근거(강사 14168 13~16강 `@NotBlank`, 40강 record 폼). 066 확인에서 공백 `"   "` ID·비밀번호로 가입이 되었다. 폼은 요청 값을 담아 전달만 하므로 setter가 필요 없다
+- 결과: 테스트 26개 통과. 실제 실행에서 공백 입력은 필수항목 오류, 비밀번호 불일치 때 ID·이메일 값 유지, 정상 가입 302. 확인 후 개발 DB 원래대로

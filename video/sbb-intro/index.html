@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="ko" data-resolution="landscape">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1920, height=1080" />
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<style>
+:root {
+  --ground: #0b1220; --panel: #131c2e; --ink: #f4f6fb; --mute: #9aa6bd;
+  --blue: #3fa7d6; --orange: #f29111; --red: #ff5d5d; --green: #7ee08a; --violet: #c3a6ff;
+  --font: "Pretendard", sans-serif;
+  --mono: "Menlo", "SF Mono", monospace;
+}
+@font-face { font-family: "Pretendard"; src: url("assets/fonts/PretendardVariable.woff2") format("woff2"); font-weight: 45 920; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--ground); }
+#root { position: relative; width: 100%; height: 100%; font-variant-ligatures: none; font-family: var(--font); color: var(--ink); overflow: hidden;
+  background: radial-gradient(1400px 900px at 90% -20%, #16365a 0%, transparent 60%),
+              radial-gradient(1100px 800px at -10% 120%, #3a2410 0%, transparent 55%), var(--ground); }
+.clip { position: absolute; inset: 0; }
+.brand { position: absolute; top: 34px; left: 90px; right: 90px; display: flex; justify-content: space-between; align-items: center;
+  font-size: 26px; font-weight: 700; color: var(--mute); }
+.brand b { color: var(--blue); } .brand b em { color: var(--orange); font-style: normal; }
+.tabs { display: flex; gap: 8px; }
+.tabs span { padding: 6px 18px; border-radius: 999px; font-size: 22px; font-weight: 700; color: #8391ad; }
+.scene { padding: 120px 90px 0; display: flex; flex-direction: column; gap: 26px; }
+.pill { align-self: flex-start; padding: 8px 22px; border-radius: 999px; background: #1d2a44; color: var(--blue); font-size: 24px; font-weight: 700; }
+.title { font-size: 62px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; }
+.title em { font-style: normal; color: var(--orange); }
+.desc { font-size: 32px; color: var(--mute); font-weight: 600; margin-top: -6px; } .desc b { color: var(--orange); }
+.hook { display: flex; flex-direction: column; gap: 40px; padding-top: 150px; }
+.big { font-size: 128px; line-height: 1.1; font-weight: 800; letter-spacing: -0.04em; }
+.big em { font-style: normal; color: var(--orange); }
+.sub { font-size: 40px; font-weight: 700; color: var(--mute); }
+.end { align-items: center; text-align: center; padding-top: 230px; }
+.repo { font-family: var(--mono); font-size: 46px; color: var(--blue); padding: 18px 36px; background: var(--panel); border-radius: 22px; }
+.code { background: #0a0f1a; border: 2px solid #26324a; border-radius: 20px; padding: 20px 24px; font-family: var(--mono);
+  font-size: 27px; line-height: 1.6; color: #d9e1f2; white-space: pre; font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
+.code .ln { margin: 0 -10px; padding: 0 10px; border-radius: 8px; }
+.code .ln.mk { background: rgba(242,145,17,.16); }
+.code .ln.bd { background: rgba(255,93,93,.14); }
+.kw { color: var(--blue); font-weight: 700; } .st { color: var(--green); } .nu { color: var(--orange); } .cm { color: #6f7d98; } .an { color: var(--violet); }
+.cmp { display: grid; grid-template-columns: 1fr 60px 1fr; gap: 16px; align-items: stretch; }
+.cmp-arrow { display: flex; align-items: center; justify-content: center; font-size: 56px; color: var(--orange); font-weight: 800; }
+.cc, .vc { border-radius: 24px; padding: 18px 22px 20px; display: flex; flex-direction: column; gap: 12px; background: var(--panel); border: 3px solid; }
+.cc.bk, .vc.bk { border-color: #3a4560; } .cc.ok, .vc.ok { border-color: var(--orange); }
+.ct { font-size: 26px; font-weight: 800; } .bk .ct { color: var(--mute); } .ok .ct { color: var(--orange); }
+.cn { font-size: 27px; font-weight: 700; color: var(--mute); } .ok .cn { color: var(--green); } .bk .cn { color: #ff9b9b; }
+.refs { display: flex; gap: 10px; align-items: center; }
+.refs::before { content: "커밋"; font-size: 22px; font-weight: 700; color: var(--mute); margin-right: 4px; }
+.refs span { font-family: var(--mono); font-size: 22px; padding: 4px 14px; border-radius: 10px; background: #1d2a44; color: var(--blue); }
+.ver { display: grid; grid-template-columns: 1fr 80px 1fr; gap: 16px; margin-top: 20px; }
+.vc { padding: 30px 40px; gap: 18px; } .vc p { font-size: 40px; font-weight: 600; color: var(--mute); }
+.vc p b { color: var(--ink); } .vc.ok p b { color: var(--orange); }
+.stats { display: grid; grid-template-columns: 1.1fr 1fr 1fr 1fr; gap: 20px; margin-top: 10px; }
+.stats div { background: var(--panel); border-radius: 24px; padding: 26px 30px; display: flex; flex-direction: column; gap: 6px; }
+.stats b { font-size: 110px; font-weight: 900; line-height: 1; }
+.stats span { font-size: 28px; font-weight: 700; color: var(--mute); }
+.st0 b { color: var(--ink); } .st1 b { color: var(--blue); } .st2 b { color: var(--orange); } .st3 b { color: var(--mute); }
+.note { padding: 18px 28px; border-radius: 20px; font-size: 28px; font-weight: 700; line-height: 1.5; background: rgba(63,167,214,.12); border-left: 8px solid var(--blue); }
+.note b { color: var(--orange); }
+code { font-family: var(--mono); color: var(--orange); font-size: .92em; }
+.split { display: grid; grid-template-columns: 640px 1fr; gap: 50px; height: 100%; }
+.lcol { display: flex; flex-direction: column; gap: 22px; }
+.feat { display: flex; flex-wrap: wrap; gap: 12px; }
+.feat span { padding: 10px 20px; background: var(--panel); border-radius: 14px; font-size: 27px; font-weight: 700; }
+.shot { align-self: start; background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 30px 70px rgba(0,0,0,.5); border: 2px solid #26324a; }
+.shot .bar3 { height: 40px; background: #1d2536; display: flex; align-items: center; gap: 8px; padding: 0 16px; }
+.shot .bar3 i { width: 13px; height: 13px; border-radius: 50%; background: #3a4560; }
+.shot .bar3 span { margin-left: 14px; font-family: var(--mono); font-size: 18px; color: var(--mute); }
+.shot .vp { position: relative; overflow: hidden; }
+.shot img { display: block; width: 100%; transform-origin: 0 0; }
+.shot img.z { position: absolute; top: 0; left: 0; opacity: 0; }
+.split > .shot { max-height: 800px; }
+.cap2 { font-size: 26px; font-weight: 700; color: var(--mute); margin-top: -8px; }
+.cards2, .cards3, .cards4 { display: grid; gap: 20px; }
+.cards2 { grid-template-columns: 1fr 1fr; } .cards3 { grid-template-columns: repeat(3, 1fr); } .cards4 { grid-template-columns: repeat(2, 1fr); }
+.card { background: var(--panel); border-radius: 22px; padding: 24px 28px; display: flex; flex-direction: column; gap: 10px; }
+.card b { font-size: 36px; color: var(--blue); font-weight: 800; }
+.card span { font-size: 28px; font-weight: 600; line-height: 1.45; }
+.card small { font-family: var(--mono); font-size: 22px; color: var(--mute); }
+.cards4 .card { padding: 30px 34px; } .cards4 .card b { font-size: 42px; }
+.term { background: #05080f; border: 2px solid #26324a; border-radius: 20px; padding: 16px 26px 20px; font-family: var(--mono);
+  font-size: 24px; line-height: 1.6; color: var(--ink); white-space: pre; }
+.term i { display: block; font-style: normal; font-family: var(--font); font-size: 22px; font-weight: 700; color: var(--mute); margin-bottom: 4px; }
+.term .cmd { color: var(--blue); }
+.flow4 { display: flex; flex-direction: column; gap: 16px; margin-top: 10px; }
+.fx { display: grid; grid-template-columns: 420px 1fr 240px; align-items: center; background: var(--panel); border-radius: 20px; padding: 22px 34px; }
+.fx b { font-size: 36px; font-weight: 800; } .fx span { font-family: var(--mono); font-size: 28px; color: var(--mute); }
+.fx em { font-style: normal; font-family: var(--mono); font-size: 44px; font-weight: 800; text-align: right; }
+.fx em.ng { color: var(--red); } .fx em.ok { color: var(--green); }
+.bars { display: flex; align-items: flex-end; gap: 14px; height: 390px; padding: 0 10px; }
+.bc { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.bc i { display: block; width: 100%; background: var(--orange); border-radius: 8px 8px 0 0; }
+.bc b { font-size: 26px; font-weight: 800; } .bc small { font-family: var(--mono); font-size: 20px; color: var(--mute); }
+.list { display: flex; flex-direction: column; gap: 14px; margin-top: 6px; }
+.row { display: flex; align-items: center; gap: 30px; background: var(--panel); border-radius: 20px; padding: 16px 34px; font-size: 38px; transform-origin: left center; }
+.row .no { font-size: 40px; font-weight: 900; color: var(--orange); width: 36px; }
+.cap { top: auto; bottom: 44px; height: auto; display: flex; justify-content: center; padding: 0 200px; }
+.cap span { background: rgba(0,0,0,.8); color: #fff; font-size: 36px; font-weight: 700; line-height: 1.4; padding: 10px 26px;
+  border-radius: 14px; text-align: center; word-break: keep-all; }
+.bar { position: absolute; left: 0; bottom: 0; height: 8px; width: 1920px; background: var(--orange); transform-origin: left center; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="365.79" data-width="1920" data-height="1080">
+  <div class="brand"><b>점프 투 <em>스프링부트</em> · SBB</b><div class="tabs"><span>최신 스택</span><span>만든 것</span><span>설정·DB</span><span>JPA</span><span>폼·보안</span><span>테스트</span></div></div>
+  <section id="sc-hook" class="clip scene" data-start="0.000" data-duration="10.714" data-track-index="1"><div class="hook">
+   <div class="pill in">점프 투 스프링부트로 만든 SBB</div>
+   <h1 class="big in">교재 <em>그대로</em>,<br/>그리고 <em>개선</em></h1>
+   <div class="sub in">질문·답변 게시판 SBB를 만들고 무엇을 왜 바꿨는지</div>
+ </div></section>
+<section id="sc-flow" class="clip scene" data-start="10.714" data-duration="22.152" data-track-index="1"><div class="pill in">작업 방식</div><h2 class="title in">섹션마다 <em>교재 구현</em> → <em>개선</em></h2><p class="desc in">교재 1-03 ~ 3-13 · 강사 수업 14163 · 14168 · 작은 작업 하나 = 커밋 하나 = 태그 하나</p><div class="stats"><div class="st0 in"><b>91</b><span>커밋 (000~090)</span></div><div class="st1 in"><b>64</b><span>[교재] 교재 그대로 구현</span></div><div class="st2 in"><b>24</b><span>[개선] 강사 방식으로 변경</span></div><div class="st3 in"><b>3</b><span>[설정] 저장소 규칙</span></div></div><div class="note in"><code>088 검색, [교재] 검색창과 검색어를 유지하는 페이징</code> · <code>090 검색, [개선] 검색을 테스트로 확인</code></div></section>
+<section id="sc-stack" class="clip scene" data-start="32.866" data-duration="18.48" data-track-index="1"><div class="pill in">최신 스택 · ADR 0001</div><h2 class="title in">교재보다 새 버전 위에서</h2><p class="desc in">개선 커밋에 <b>버전 차이로 생긴 수정</b>이 섞이지 않도록</p><div class="ver"><div class="vc bk in"><div class="ct">교재</div><p>Spring Boot <b>3.x</b></p><p>Java <b>19~20</b></p><p>Gradle <b>Groovy</b></p></div><div class="cmp-arrow in">→</div><div class="vc ok in"><div class="ct">이 프로젝트 (강사 환경)</div><p>Spring Boot <b>4.1.2</b></p><p>Java <b>25</b></p><p>Gradle <b>Kotlin DSL</b></p></div></div></section>
+<section id="sc-stack2" class="clip scene" data-start="51.346" data-duration="18.528" data-track-index="1"><div class="pill in">최신 스택 · 교재와 차이</div><h2 class="title in">그대로 안 되는 곳은 최소한만</h2><p class="desc in">커밋 본문의 <b>교재와 차이:</b>에 기록</p><div class="cmp"><div class="cc bk in"><div class="ct">교재</div><div class="code"><div class="ln"><span class="cm">// build.gradle</span></div><div class="ln">implementation 'org.springframework.boot:</div><div class="ln bd">    spring-boot-starter-web'</div><div class="ln">&nbsp;</div><div class="ln bd">requestMatchers(<span class="kw">new</span> AntPathRequestMatcher(</div><div class="ln">    <span class="st">"/**"</span>))</div></div><p class="cn">Spring Boot 3 · Spring Security 6</p></div><div class="cmp-arrow in">→</div><div class="cc ok in"><div class="ct">개선</div><div class="code"><div class="ln"><span class="cm">// build.gradle.kts</span></div><div class="ln">implementation(<span class="st">"</span>org.springframework.boot:</div><div class="ln mk">    spring-boot-starter-webmvc<span class="st">"</span>)</div><div class="ln">&nbsp;</div><div class="ln"><span class="cm">// Security 7: AntPathRequestMatcher 삭제</span></div><div class="ln mk">requestMatchers(<span class="st">"/**"</span>)</div></div><p class="cn">Spring Boot 4.1.2 · Spring Security 7</p></div></div><div class="refs in"><span>001</span><span>061</span><span>062</span><span>070</span></div></section>
+<section id="sc-built" class="clip scene" data-start="69.874" data-duration="21.144" data-track-index="1"><div class="split"><div class="lcol"><div class="pill in">만든 것 · 교재 1-03 ~ 3-13</div><h2 class="title in">SBB 질문·답변 게시판</h2><div class="feat in"><span>질문 목록·상세</span><span>답변</span><span>질문 등록·입력 검증</span><span>페이징</span><span>회원 가입·로그인</span><span>글쓴이</span><span>수정·삭제</span><span>추천</span><span>마크다운</span><span>검색</span></div><div class="note in">한 페이지 <b>10개</b> · 페이지 번호 · 검색창</div></div><div class="shot in"><div class="bar3"><i></i><i></i><i></i><span>localhost:8080</span></div><div class="vp"><img id="shot-list" class="" src="assets/shots/list.png" /></div></div></div></section>
+<section id="sc-built2" class="clip scene" data-start="91.018" data-duration="20.184" data-track-index="1"><div class="split"><div class="lcol"><div class="pill in">만든 것</div><h2 class="title in">로그인·글쓴이·추천<br/>마크다운·검색</h2><div class="note in">내가 쓴 글에만 <b>수정·삭제</b><br/>추천 수 <b>배지</b> · 내용은 <b>마크다운</b></div><div class="note in">제목·내용·글쓴이·답변 검색<br/><code>/question/list?kw=LAZY</code></div></div><div class="shot in"><div class="bar3"><i></i><i></i><i></i><span>localhost:8080</span></div><div class="vp"><img id="shot-detail" class="" src="assets/shots/detail.png" /><img id="shot-search" class="z" src="assets/shots/search.png" /></div></div></div></section>
+<section id="sc-db" class="clip scene" data-start="111.202" data-duration="28.392" data-track-index="1"><div class="pill in">개선 ① 설정·DB</div><h2 class="title in">개발 DB와 테스트 DB 분리</h2><p class="desc in">테스트가 개발 DB를 건드려 <b>삭제 테스트가 2번째 실행에서 실패</b> (017)</p><div class="cmp"><div class="cc bk in"><div class="ct">교재</div><div class="code"><div class="ln"><span class="cm"># application.properties (하나)</span></div><div class="ln">spring.datasource.url=</div><div class="ln bd">    jdbc:h2:~/local</div><div class="ln">&nbsp;</div><div class="ln bd"><span class="cm"># 테스트도 같은 개발 DB를 사용</span></div></div></div><div class="cmp-arrow in">→</div><div class="cc ok in"><div class="ct">개선</div><div class="code"><div class="ln"><span class="cm"># application.yml</span></div><div class="ln">spring.profiles.active: dev</div><div class="ln"><span class="cm"># application-dev.yml</span></div><div class="ln mk">url: jdbc:h2:./db_dev;MODE=MySQL</div><div class="ln"><span class="cm"># application-test.yml</span></div><div class="ln mk">url: jdbc:h2:mem:db_test;MODE=MySQL</div></div><p class="cn">테스트가 끝나면 메모리 DB도 사라짐 → 언제 몇 번 돌려도 같은 결과</p></div></div><div class="refs in"><span>010</span><span>020</span></div></section>
+<section id="sc-db2" class="clip scene" data-start="139.594" data-duration="19.992" data-track-index="1"><div class="pill in">개선 ① 설정·DB</div><h2 class="title in">환경별로 나눈 설정 몇 가지</h2><div class="cards3"><div class="card in"><b>타임리프 캐시</b><span><code>cache: false</code>는 dev 프로필에서만</span><small>028</small></div><div class="card in"><b>샘플 데이터</b><span>개발 DB가 비어 있으면 <code>TestInitData</code>가 질문 2개 생성</span><small>029</small></div><div class="card in"><b>SQL 로그</b><span>바인딩 값 · 조회 값 · 트랜잭션 시작/완료 출력</span><small>023</small></div></div><div class="term in"><i>테스트 로그</i><div>binding parameter (1:VARCHAR) &lt;- [sbb에 대해서 알고 싶습니다.]</div><div class="cmd">Getting transaction for [...SimpleJpaRepository.count]</div></div></section>
+<section id="sc-lazy" class="clip scene" data-start="159.586" data-duration="22.416" data-track-index="1"><div class="pill in">개선 ② JPA 엔티티</div><h2 class="title in">@ManyToOne에는 LAZY</h2><p class="desc in">기본값 EAGER → 답변만 조회해도 <b>질문까지 항상 조회</b></p><div class="cmp"><div class="cc bk in"><div class="ct">교재</div><div class="code"><div class="ln"><span class="cm">// Answer.java</span></div><div class="ln bd"><span class="an">@ManyToOne</span></div><div class="ln"><span class="kw">private</span> Question question;</div><div class="ln">&nbsp;</div><div class="ln"><span class="cm">// Question.java</span></div><div class="ln bd"><span class="kw">private</span> List&lt;Answer&gt; answerList;</div></div><p class="cn">새로 만든 Question의 answerList는 null</p></div><div class="cmp-arrow in">→</div><div class="cc ok in"><div class="ct">개선</div><div class="code"><div class="ln"><span class="cm">// Answer.java</span></div><div class="ln mk"><span class="an">@ManyToOne</span>(fetch = FetchType.LAZY)</div><div class="ln"><span class="kw">private</span> Question question;</div><div class="ln">&nbsp;</div><div class="ln"><span class="cm">// Question.java</span></div><div class="ln mk"><span class="kw">private</span> List&lt;Answer&gt; answerList</div><div class="ln mk">        = <span class="kw">new</span> ArrayList&lt;&gt;();</div></div><p class="cn">질문은 실제로 쓸 때만 조회 · NPE 방지</p></div></div><div class="refs in"><span>013</span></div></section>
+<section id="sc-add" class="clip scene" data-start="182.002" data-duration="23.76" data-track-index="1"><div class="pill in">개선 ② JPA 엔티티</div><h2 class="title in">답변은 질문 쪽에서 만든다</h2><p class="desc in">교재 방식은 꺼내 둔 <b>question.answerList에 새 답변이 없음</b></p><div class="cmp"><div class="cc bk in"><div class="ct">교재</div><div class="code"><div class="ln"><span class="cm">// AnswerService.create</span></div><div class="ln">Answer answer = <span class="kw">new</span> Answer();</div><div class="ln">answer.setContent(content);</div><div class="ln bd">answer.setQuestion(question);</div><div class="ln bd"><span class="kw">this</span>.answerRepository.save(answer);</div></div><p class="cn">연관관계의 한쪽만 설정</p></div><div class="cmp-arrow in">→</div><div class="cc ok in"><div class="ct">개선</div><div class="code"><div class="ln"><span class="cm">// AnswerService.create</span></div><div class="ln"><span class="an">@Transactional</span></div><div class="ln mk">question.addAnswer(content);</div><div class="ln">&nbsp;</div><div class="ln"><span class="cm">// Question.java</span></div><div class="ln"><span class="an">@OneToMany</span>(mappedBy = <span class="st">"question"</span>,</div><div class="ln mk">  cascade = {PERSIST, REMOVE})</div></div><p class="cn">양쪽이 함께 맞춰지고, 커밋 때 cascade로 insert</p></div></div><div class="refs in"><span>022</span><span>040</span></div></section>
+<section id="sc-orphan" class="clip scene" data-start="205.762" data-duration="16.32" data-track-index="1"><div class="pill in">개선 ② JPA 엔티티</div><h2 class="title in">삭제도 질문 쪽에서</h2><p class="desc in">목록에서 빼면 <b>orphanRemoval</b>이 커밋 때 delete</p><div class="cmp"><div class="cc bk in"><div class="ct">교재</div><div class="code"><div class="ln"><span class="cm">// AnswerService.delete</span></div><div class="ln bd"><span class="kw">this</span>.answerRepository.delete(answer);</div><div class="ln">&nbsp;</div><div class="ln"><span class="cm">// DB에선 지워졌지만</span></div><div class="ln bd"><span class="cm">// question.answerList엔 남아 있음</span></div></div></div><div class="cmp-arrow in">→</div><div class="cc ok in"><div class="ct">개선</div><div class="code"><div class="ln"><span class="cm">// AnswerService.delete</span></div><div class="ln"><span class="an">@Transactional</span></div><div class="ln mk">answer.getQuestion().deleteAnswer(answer);</div><div class="ln">&nbsp;</div><div class="ln mk"><span class="an">@OneToMany</span>(..., orphanRemoval = <span class="kw">true</span>)</div><div class="ln"><span class="cm">// deleteAnswer = answerList.remove(answer)</span></div></div><p class="cn">엔티티의 목록과 DB가 같은 상태로 유지</p></div></div><div class="refs in"><span>081</span></div></section>
+<section id="sc-form" class="clip scene" data-start="222.082" data-duration="21.192" data-track-index="1"><div class="pill in">개선 ③ 폼·보안</div><h2 class="title in">@NotBlank와 record 폼</h2><p class="desc in">@NotEmpty는 길이 0만 막아 <b>공백만 넣은 제목</b>이 저장됨</p><div class="cmp"><div class="cc bk in"><div class="ct">교재</div><div class="code"><div class="ln"><span class="an">@Getter</span> <span class="an">@Setter</span></div><div class="ln"><span class="kw">public</span> <span class="kw">class</span> QuestionForm {</div><div class="ln bd">  <span class="an">@NotEmpty</span>(message = <span class="st">"제목은 ..."</span>)</div><div class="ln">  <span class="an">@Size</span>(max = <span class="nu">200</span>)</div><div class="ln">  <span class="kw">private</span> String subject;</div><div class="ln bd">  <span class="an">@NotEmpty</span>(message = <span class="st">"내용은 ..."</span>)</div><div class="ln">  <span class="kw">private</span> String content;</div><div class="ln">}</div></div><p class="cn">"   " → 목록에 빈 링크</p></div><div class="cmp-arrow in">→</div><div class="cc ok in"><div class="ct">개선</div><div class="code"><div class="ln mk"><span class="kw">public</span> <span class="kw">record</span> QuestionForm(</div><div class="ln mk">  <span class="an">@NotBlank</span>(message = <span class="st">"제목은 ..."</span>)</div><div class="ln">  <span class="an">@Size</span>(max = <span class="nu">200</span>)</div><div class="ln">  String subject,</div><div class="ln mk">  <span class="an">@NotBlank</span>(message = <span class="st">"내용은 ..."</span>)</div><div class="ln">  String content</div><div class="ln">) {}</div></div><p class="cn">"   " 거부 · setter 없는 불변 객체</p></div></div><div class="refs in"><span>053</span><span>054</span><span>067</span></div></section>
+<section id="sc-csrf" class="clip scene" data-start="243.274" data-duration="25.968" data-track-index="1"><div class="pill in">개선 ③ 폼·보안</div><h2 class="title in">상태를 바꾸는 요청은 토큰이 있는 폼으로</h2><p class="desc in">시큐리티는 <b>GET에 CSRF 토큰을 검사하지 않음</b> → 다른 사이트의 &lt;img src="/question/delete/1"&gt;</p><div class="cmp"><div class="cc bk in"><div class="ct">교재</div><div class="code"><div class="ln">&lt;a href=<span class="st">"javascript:void(0);"</span></div><div class="ln">   th:data-uri=<span class="st">"@{|/question/delete/..|}"</span></div><div class="ln">   <span class="kw">class</span>=<span class="st">"delete"</span>&gt;삭제&lt;/a&gt;</div><div class="ln bd"><span class="cm">// 자바스크립트가 location.href로 GET</span></div><div class="ln bd"><span class="an">@GetMapping</span>(<span class="st">"/delete/{id}"</span>)</div></div><p class="cn">로그아웃 · 삭제 · 추천 모두 GET</p></div><div class="cmp-arrow in">→</div><div class="cc ok in"><div class="ct">개선</div><div class="code"><div class="ln mk">&lt;form th:action=<span class="st">"@{|/question/delete/..|}"</span></div><div class="ln">      method=<span class="st">"post"</span>&gt;</div><div class="ln mk">  &lt;input type=<span class="st">"hidden"</span> name=<span class="st">"_method"</span></div><div class="ln mk">         value=<span class="st">"DELETE"</span>&gt;</div><div class="ln">  &lt;button&gt;삭제&lt;/button&gt;&lt;/form&gt;</div><div class="ln mk"><span class="an">@DeleteMapping</span>(<span class="st">"/delete/{id}"</span>)</div></div><p class="cn">th:action이 _csrf를 넣음 · hiddenmethod 필터</p></div></div><div class="refs in"><span>071</span><span>080</span><span>084</span></div></section>
+<section id="sc-guard" class="clip scene" data-start="269.242" data-duration="12.792" data-track-index="1"><div class="pill in">개선 ③ 폼·보안</div><h2 class="title in">삭제 요청은 이렇게 걸러진다</h2><p class="desc in">080 검증: bootRun 후 직접 보낸 요청</p><div class="flow4"><div class="fx in"><b>GET</b><span>/question/delete/303</span><em class="ng">405</em></div><div class="fx in"><b>POST · 토큰 없음</b><span>_method=DELETE</span><em class="ng">403</em></div><div class="fx in"><b>다른 사용자 user2</b><span>토큰과 함께</span><em class="ng">400</em></div><div class="fx in"><b>글쓴이 user1</b><span>토큰과 함께</span><em class="ok">302 삭제</em></div></div></section>
+<section id="sc-rollback" class="clip scene" data-start="282.034" data-duration="19.632" data-track-index="1"><div class="pill in">개선 ④ 테스트</div><h2 class="title in">모든 단계의 테스트를 남기고 롤백</h2><p class="desc in">교재: 테스트를 <b>지우고 다시 쓰며</b> 진행 → 지난 단계 테스트가 없음</p><div class="cmp"><div class="cc bk in"><div class="ct">교재</div><div class="code"><div class="ln"><span class="an">@SpringBootTest</span></div><div class="ln"><span class="kw">class</span> SbbApplicationTests {</div><div class="ln">  <span class="an">@Test</span></div><div class="ln">  <span class="kw">void</span> testJpa() {</div><div class="ln bd">    <span class="cm">// 단계마다 내용을 바꿔 씀</span></div><div class="ln">  }</div><div class="ln">}</div></div></div><div class="cmp-arrow in">→</div><div class="cc ok in"><div class="ct">개선</div><div class="code"><div class="ln mk"><span class="an">@ActiveProfiles</span>(<span class="st">"test"</span>)</div><div class="ln"><span class="an">@SpringBootTest</span></div><div class="ln mk"><span class="an">@Transactional</span>  <span class="cm">// 메서드마다 롤백</span></div><div class="ln"><span class="kw">class</span> QuestionRepositoryTest {</div><div class="ln">  <span class="an">@Test</span> <span class="an">@DisplayName</span>(<span class="st">"findAll"</span>)</div><div class="ln">  <span class="kw">void</span> t1() { ... }</div><div class="ln mk">  <span class="cm">// t2 ~ t11 모두 남김</span></div><div class="ln">}</div></div><p class="cn">실행 순서와 상관없이 매번 같은 TestInitData에서 시작</p></div></div><div class="refs in"><span>020</span><span>021</span></div></section>
+<section id="sc-tests" class="clip scene" data-start="301.666" data-duration="22.32" data-track-index="1"><div class="pill in">개선 ④ 테스트</div><h2 class="title in">테스트 2개 → 53개</h2><p class="desc in">MockMvc로 화면 요청까지 · <b>코드를 잠시 되돌려 실패하는지</b> 확인</p><div class="bars in"><div class="bc"><b>2</b><i style="height:11px"></i><small>020</small></div><div class="bc"><b>10</b><i style="height:57px"></i><small>021</small></div><div class="bc"><b>11</b><i style="height:62px"></i><small>022</small></div><div class="bc"><b>13</b><i style="height:74px"></i><small>035</small></div><div class="bc"><b>15</b><i style="height:85px"></i><small>040</small></div><div class="bc"><b>19</b><i style="height:108px"></i><small>053</small></div><div class="bc"><b>20</b><i style="height:113px"></i><small>054</small></div><div class="bc"><b>22</b><i style="height:125px"></i><small>063</small></div><div class="bc"><b>26</b><i style="height:147px"></i><small>067</small></div><div class="bc"><b>31</b><i style="height:175px"></i><small>071</small></div><div class="bc"><b>34</b><i style="height:192px"></i><small>075</small></div><div class="bc"><b>43</b><i style="height:243px"></i><small>080</small></div><div class="bc"><b>44</b><i style="height:249px"></i><small>081</small></div><div class="bc"><b>49</b><i style="height:277px"></i><small>084</small></div><div class="bc"><b>53</b><i style="height:300px"></i><small>090</small></div></div><div class="cards2"><div class="card in"><b>csrf.disable()</b><span>CSRF 테스트 2개 실패 (063)</span></div><div class="card in"><b>distinct 제거</b><span>검색 count 테스트 실패 (090)</span></div></div></section>
+<section id="sc-etc" class="clip scene" data-start="323.986" data-duration="15.528" data-track-index="1"><div class="pill in">그 밖에</div><h2 class="title in">작은 개선들</h2><div class="cards4"><div class="card in"><b>부트스트랩</b><span>static 파일 대신 cdnjs 5.3.8</span><small>044</small></div><div class="card in"><b>프리텐다드</b><span>OS와 상관없이 같은 한글 글꼴</span><small>045</small></div><div class="card in"><b>탭 제목</b><span>질문 목록 | SBB</span><small>049</small></div><div class="card in"><b>xmlns 선언</b><span>th · layout 편집기 경고 제거</span><small>048</small></div></div></section>
+<section id="sc-outro" class="clip scene" data-start="339.514" data-duration="18.816" data-track-index="1"><div class="pill in">정리</div><h2 class="title in">교재 대비 바꾼 것 다섯 가지</h2><div class="list in"><div class="row" id="ex1"><span class="no">1</span><b>프로필로 개발 DB · 테스트 DB 분리</b></div><div class="row" id="ex2"><span class="no">2</span><b>LAZY · 질문 쪽에서 답변 추가/삭제</b></div><div class="row" id="ex3"><span class="no">3</span><b>@NotBlank · record 폼</b></div><div class="row" id="ex4"><span class="no">4</span><b>상태 변경은 CSRF 토큰이 있는 폼</b></div><div class="row" id="ex5"><span class="no">5</span><b>테스트 53개로 동작 고정</b></div></div></section>
+<section id="sc-end" class="clip scene" data-start="358.330" data-duration="7.46" data-track-index="1"><div class="hook end">
+   <h1 class="big in">감사합니다</h1>
+   <div class="repo in">github.com/wiwi-git/jump-to-springboot</div>
+   <div class="sub in">커밋 000~090 · 태그로 그 시점 코드를 열 수 있어요</div>
+ </div></section>
+  <div id="cap-hook-0" class="clip cap" data-start="0.400" data-duration="2.159" data-track-index="2"><span>점프 투 스프링부트로 SBB,</span></div>
+<div id="cap-hook-1" class="clip cap" data-start="2.559" data-duration="2.941" data-track-index="2"><span>질문 답변 게시판을 만들었습니다.</span></div>
+<div id="cap-hook-2" class="clip cap" data-start="5.500" data-duration="1.574" data-track-index="2"><span>교재 그대로 만든 것과,</span></div>
+<div id="cap-hook-3" class="clip cap" data-start="7.074" data-duration="3.190" data-track-index="2"><span>그중 무엇을 왜 개선했는지 소개합니다.</span></div>
+<div id="cap-flow-0" class="clip cap" data-start="10.864" data-duration="2.355" data-track-index="2"><span>작업 방식은 단순해요.</span></div>
+<div id="cap-flow-1" class="clip cap" data-start="13.219" data-duration="2.723" data-track-index="2"><span>교재 섹션마다 먼저 교재 그대로 구현하고,</span></div>
+<div id="cap-flow-2" class="clip cap" data-start="15.942" data-duration="4.855" data-track-index="2"><span>섹션을 마치면 강사 수업의 방식으로 개선 커밋을 따로 만들었어요.</span></div>
+<div id="cap-flow-3" class="clip cap" data-start="20.797" data-duration="1.931" data-track-index="2"><span>커밋 하나에 작은 작업 하나,</span></div>
+<div id="cap-flow-4" class="clip cap" data-start="22.728" data-duration="3.382" data-track-index="2"><span>그리고 커밋마다 같은 번호의 태그를 달았어요.</span></div>
+<div id="cap-flow-5" class="clip cap" data-start="26.110" data-duration="1.696" data-track-index="2"><span>그렇게 쌓인 커밋이 91개.</span></div>
+<div id="cap-flow-6" class="clip cap" data-start="27.806" data-duration="4.610" data-track-index="2"><span>교재 구현 64개, 개선 24개, 설정 3개예요.</span></div>
+<div id="cap-stack-0" class="clip cap" data-start="33.016" data-duration="3.677" data-track-index="2"><span>교재는 Spring Boot 3.x, Java 19~20,</span></div>
+<div id="cap-stack-1" class="clip cap" data-start="36.693" data-duration="2.227" data-track-index="2"><span>Groovy 빌드 기준이에요.</span></div>
+<div id="cap-stack-2" class="clip cap" data-start="38.920" data-duration="5.145" data-track-index="2"><span>이 프로젝트는 처음부터 강사 환경인 Spring Boot 4.1.2, Java 25,</span></div>
+<div id="cap-stack-3" class="clip cap" data-start="44.065" data-duration="2.444" data-track-index="2"><span>Kotlin DSL을 썼어요.</span></div>
+<div id="cap-stack-4" class="clip cap" data-start="46.509" data-duration="4.387" data-track-index="2"><span>개선 커밋에 버전 차이로 생긴 수정이 섞이지 않게 하려는 거예요.</span></div>
+<div id="cap-stack2-0" class="clip cap" data-start="51.496" data-duration="4.297" data-track-index="2"><span>버전이 달라서 교재 코드가 그대로 안 되는 곳도 있었어요.</span></div>
+<div id="cap-stack2-1" class="clip cap" data-start="55.793" data-duration="3.013" data-track-index="2"><span>spring-boot-starter-web은 spring-boot-starter-webmvc로 이름이 바뀌었고,</span></div>
+<div id="cap-stack2-2" class="clip cap" data-start="58.806" data-duration="4.676" data-track-index="2"><span>Spring Security 7에서는 AntPathRequestMatcher가 삭제됐어요.</span></div>
+<div id="cap-stack2-3" class="clip cap" data-start="63.483" data-duration="2.790" data-track-index="2"><span>이런 곳은 동작에 필요한 최소한만 고치고,</span></div>
+<div id="cap-stack2-4" class="clip cap" data-start="66.273" data-duration="3.151" data-track-index="2"><span>커밋 본문에 교재와 차이로 남겼어요.</span></div>
+<div id="cap-built-0" class="clip cap" data-start="70.024" data-duration="2.857" data-track-index="2"><span>먼저 교재로 만든 것부터 볼게요.</span></div>
+<div id="cap-built-1" class="clip cap" data-start="72.881" data-duration="2.388" data-track-index="2"><span>질문 목록과 상세, 답변,</span></div>
+<div id="cap-built-2" class="clip cap" data-start="75.270" data-duration="3.069" data-track-index="2"><span>질문 등록과 입력 검증, 페이징을 만들고,</span></div>
+<div id="cap-built-3" class="clip cap" data-start="78.339" data-duration="3.750" data-track-index="2"><span>Spring Security로 회원 가입과 로그인을 붙였어요.</span></div>
+<div id="cap-built-4" class="clip cap" data-start="82.089" data-duration="2.522" data-track-index="2"><span>이 화면이 질문 목록이에요.</span></div>
+<div id="cap-built-5" class="clip cap" data-start="84.611" data-duration="1.574" data-track-index="2"><span>한 페이지에 열 개씩,</span></div>
+<div id="cap-built-6" class="clip cap" data-start="86.185" data-duration="1.696" data-track-index="2"><span>아래에 페이지 번호가 있고,</span></div>
+<div id="cap-built-7" class="clip cap" data-start="87.881" data-duration="2.687" data-track-index="2"><span>오른쪽 위에 검색창이 있어요.</span></div>
+<div id="cap-built2-0" class="clip cap" data-start="91.168" data-duration="2.327" data-track-index="2"><span>로그인하면 글쓴이가 기록되고,</span></div>
+<div id="cap-built2-1" class="clip cap" data-start="93.495" data-duration="3.265" data-track-index="2"><span>내가 쓴 글에만 수정과 삭제 버튼이 보여요.</span></div>
+<div id="cap-built2-2" class="clip cap" data-start="96.760" data-duration="4.152" data-track-index="2"><span>추천 수는 배지로, 내용은 마크다운으로 렌더링돼요.</span></div>
+<div id="cap-built2-3" class="clip cap" data-start="100.911" data-duration="2.779" data-track-index="2"><span>마지막으로 제목, 내용, 글쓴이,</span></div>
+<div id="cap-built2-4" class="clip cap" data-start="103.690" data-duration="3.315" data-track-index="2"><span>답변까지 한 번에 찾는 검색을 만들었어요.</span></div>
+<div id="cap-built2-5" class="clip cap" data-start="107.005" data-duration="3.747" data-track-index="2"><span>여기까지가 교재 1장부터 3장 검색까지예요.</span></div>
+<div id="cap-db-0" class="clip cap" data-start="111.352" data-duration="1.920" data-track-index="2"><span>이제 개선이에요.</span></div>
+<div id="cap-db-1" class="clip cap" data-start="113.272" data-duration="2.980" data-track-index="2"><span>첫 번째는 설정과 데이터베이스.</span></div>
+<div id="cap-db-2" class="clip cap" data-start="116.252" data-duration="2.154" data-track-index="2"><span>교재는 설정을 한 파일에 몰아 두고,</span></div>
+<div id="cap-db-3" class="clip cap" data-start="118.406" data-duration="2.779" data-track-index="2"><span>테스트도 개발 DB를 같이 써요.</span></div>
+<div id="cap-db-4" class="clip cap" data-start="121.185" data-duration="2.645" data-track-index="2"><span>그래서 테스트가 개발 데이터를 넣고 지우고,</span></div>
+<div id="cap-db-5" class="clip cap" data-start="123.830" data-duration="3.560" data-track-index="2"><span>삭제 테스트는 두 번째 실행에서 실패했어요.</span></div>
+<div id="cap-db-6" class="clip cap" data-start="127.390" data-duration="1.975" data-track-index="2"><span>개선 후에는 프로필로 나눠서,</span></div>
+<div id="cap-db-7" class="clip cap" data-start="129.365" data-duration="2.165" data-track-index="2"><span>개발은 프로젝트 폴더의 파일 DB,</span></div>
+<div id="cap-db-8" class="clip cap" data-start="131.531" data-duration="2.545" data-track-index="2"><span>테스트는 메모리 DB를 써요.</span></div>
+<div id="cap-db-9" class="clip cap" data-start="134.075" data-duration="2.143" data-track-index="2"><span>테스트가 끝나면 DB도 사라지니,</span></div>
+<div id="cap-db-10" class="clip cap" data-start="136.218" data-duration="2.926" data-track-index="2"><span>몇 번을 돌려도 같은 결과가 나와요.</span></div>
+<div id="cap-db2-0" class="clip cap" data-start="139.744" data-duration="3.304" data-track-index="2"><span>같은 생각으로 몇 가지를 더 나눴어요.</span></div>
+<div id="cap-db2-1" class="clip cap" data-start="143.048" data-duration="2.623" data-track-index="2"><span>타임리프 캐시는 개발 프로필에서만 끄고,</span></div>
+<div id="cap-db2-2" class="clip cap" data-start="145.670" data-duration="3.549" data-track-index="2"><span>개발 DB가 비어 있으면 샘플 데이터를 만들어요.</span></div>
+<div id="cap-db2-3" class="clip cap" data-start="149.219" data-duration="2.210" data-track-index="2"><span>SQL 로그에는 물음표 자리에 들어간</span></div>
+<div id="cap-db2-4" class="clip cap" data-start="151.429" data-duration="2.958" data-track-index="2"><span>바인딩 값과 트랜잭션의 시작과 끝을 찍어서,</span></div>
+<div id="cap-db2-5" class="clip cap" data-start="154.387" data-duration="4.749" data-track-index="2"><span>어떤 메소드가 어떤 쿼리를 실행했는지 직접 볼 수 있게 했어요.</span></div>
+<div id="cap-lazy-0" class="clip cap" data-start="159.736" data-duration="2.891" data-track-index="2"><span>두 번째는 JPA 엔티티예요.</span></div>
+<div id="cap-lazy-1" class="clip cap" data-start="162.627" data-duration="2.578" data-track-index="2"><span>@ManyToOne은 기본값이 즉시 로딩이라,</span></div>
+<div id="cap-lazy-2" class="clip cap" data-start="165.205" data-duration="3.571" data-track-index="2"><span>답변을 조회하면 질문도 항상 같이 조회돼요.</span></div>
+<div id="cap-lazy-3" class="clip cap" data-start="168.776" data-duration="2.098" data-track-index="2"><span>강사 방식대로 LAZY를 걸어서,</span></div>
+<div id="cap-lazy-4" class="clip cap" data-start="170.874" data-duration="3.192" data-track-index="2"><span>질문을 실제로 쓸 때만 조회하게 했어요.</span></div>
+<div id="cap-lazy-5" class="clip cap" data-start="174.066" data-duration="2.533" data-track-index="2"><span>답변 리스트도 빈 리스트로 초기화해서,</span></div>
+<div id="cap-lazy-6" class="clip cap" data-start="176.600" data-duration="1.875" data-track-index="2"><span>새로 만든 질문에 답변을 넣을 때</span></div>
+<div id="cap-lazy-7" class="clip cap" data-start="178.475" data-duration="3.077" data-track-index="2"><span>널 포인터 예외가 나지 않게 했어요.</span></div>
+<div id="cap-add-0" class="clip cap" data-start="182.152" data-duration="2.433" data-track-index="2"><span>답변 저장도 바꿨어요.</span></div>
+<div id="cap-add-1" class="clip cap" data-start="184.585" data-duration="4.487" data-track-index="2"><span>교재는 답변에 질문을 넣고 답변 리포지터리로 저장해요.</span></div>
+<div id="cap-add-2" class="clip cap" data-start="189.072" data-duration="5.469" data-track-index="2"><span>DB에는 들어가지만, 이미 꺼내 둔 질문의 답변 목록에는 새 답변이 없어요.</span></div>
+<div id="cap-add-3" class="clip cap" data-start="194.540" data-duration="2.411" data-track-index="2"><span>관계의 한쪽만 맞춘 거죠.</span></div>
+<div id="cap-add-4" class="clip cap" data-start="196.951" data-duration="3.549" data-track-index="2"><span>개선 후에는 질문의 addAnswer 한 번으로 양쪽이 맞춰지고,</span></div>
+<div id="cap-add-5" class="clip cap" data-start="200.500" data-duration="4.812" data-track-index="2"><span>cascade PERSIST가 트랜잭션이 끝날 때 답변을 함께 저장해요.</span></div>
+<div id="cap-orphan-0" class="clip cap" data-start="205.912" data-duration="2.534" data-track-index="2"><span>삭제도 질문 쪽에서 해요.</span></div>
+<div id="cap-orphan-1" class="clip cap" data-start="208.446" data-duration="2.098" data-track-index="2"><span>교재처럼 리포지터리로 지우면,</span></div>
+<div id="cap-orphan-2" class="clip cap" data-start="210.544" data-duration="4.241" data-track-index="2"><span>메모리에 올라온 답변 목록에는 지운 답변이 그대로 남아요.</span></div>
+<div id="cap-orphan-3" class="clip cap" data-start="214.785" data-duration="3.080" data-track-index="2"><span>개선 후에는 deleteAnswer로 목록에서 빼기만 하면,</span></div>
+<div id="cap-orphan-4" class="clip cap" data-start="217.865" data-duration="3.767" data-track-index="2"><span>orphanRemoval이 고아가 된 답변을 커밋 때 지워 줘요.</span></div>
+<div id="cap-form-0" class="clip cap" data-start="222.232" data-duration="2.701" data-track-index="2"><span>세 번째는 폼과 보안이에요.</span></div>
+<div id="cap-form-1" class="clip cap" data-start="224.933" data-duration="2.667" data-track-index="2"><span>교재의 @NotEmpty는 길이가 0인 값만 막아서,</span></div>
+<div id="cap-form-2" class="clip cap" data-start="227.600" data-duration="4.342" data-track-index="2"><span>공백만 넣은 제목이 저장되고 목록에 빈 링크가 생겼어요.</span></div>
+<div id="cap-form-3" class="clip cap" data-start="231.942" data-duration="4.252" data-track-index="2"><span>@NotBlank로 바꿔서 보이는 글자가 있어야 통과하게 했어요.</span></div>
+<div id="cap-form-4" class="clip cap" data-start="236.194" data-duration="2.913" data-track-index="2"><span>폼 클래스는 record로 바꿨어요.</span></div>
+<div id="cap-form-5" class="clip cap" data-start="239.107" data-duration="3.717" data-track-index="2"><span>setter가 필요 없는 불변 객체라 코드도 짧아져요.</span></div>
+<div id="cap-csrf-0" class="clip cap" data-start="243.424" data-duration="2.025" data-track-index="2"><span>교재는 로그아웃, 삭제,</span></div>
+<div id="cap-csrf-1" class="clip cap" data-start="245.449" data-duration="2.361" data-track-index="2"><span>추천을 GET 요청으로 보내요.</span></div>
+<div id="cap-csrf-2" class="clip cap" data-start="247.810" data-duration="2.210" data-track-index="2"><span>그런데 Spring Security는 GET 요청에는</span></div>
+<div id="cap-csrf-3" class="clip cap" data-start="250.020" data-duration="2.891" data-track-index="2"><span>CSRF 토큰을 검사하지 않아요.</span></div>
+<div id="cap-csrf-4" class="clip cap" data-start="252.911" data-duration="3.058" data-track-index="2"><span>그래서 다른 사이트에 &lt;img&gt; 태그 하나만 숨겨 둬도,</span></div>
+<div id="cap-csrf-5" class="clip cap" data-start="255.969" data-duration="3.638" data-track-index="2"><span>그 페이지를 연 글쓴이의 질문이 삭제될 수 있어요.</span></div>
+<div id="cap-csrf-6" class="clip cap" data-start="259.607" data-duration="3.237" data-track-index="2"><span>그래서 셋 다 타임리프 폼으로 바꿨어요.</span></div>
+<div id="cap-csrf-7" class="clip cap" data-start="262.844" data-duration="2.321" data-track-index="2"><span>타임리프가 토큰을 자동으로 넣어 주고,</span></div>
+<div id="cap-csrf-8" class="clip cap" data-start="265.165" data-duration="3.627" data-track-index="2"><span>삭제는 hiddenmethod 필터로 DELETE 요청이 돼요.</span></div>
+<div id="cap-guard-0" class="clip cap" data-start="269.392" data-duration="3.705" data-track-index="2"><span>그 결과, 삭제 요청은 이렇게 걸러져요.</span></div>
+<div id="cap-guard-1" class="clip cap" data-start="273.097" data-duration="1.529" data-track-index="2"><span>GET으로 보내면 405,</span></div>
+<div id="cap-guard-2" class="clip cap" data-start="274.626" data-duration="1.797" data-track-index="2"><span>토큰이 없으면 403,</span></div>
+<div id="cap-guard-3" class="clip cap" data-start="276.423" data-duration="1.752" data-track-index="2"><span>다른 사용자가 보내면 400,</span></div>
+<div id="cap-guard-4" class="clip cap" data-start="278.175" data-duration="3.409" data-track-index="2"><span>글쓴이가 토큰과 함께 보낼 때만 삭제돼요.</span></div>
+<div id="cap-rollback-0" class="clip cap" data-start="282.184" data-duration="2.310" data-track-index="2"><span>네 번째는 테스트예요.</span></div>
+<div id="cap-rollback-1" class="clip cap" data-start="284.494" data-duration="3.170" data-track-index="2"><span>교재는 테스트 하나를 지우고 다시 쓰면서 진행해서,</span></div>
+<div id="cap-rollback-2" class="clip cap" data-start="287.664" data-duration="2.846" data-track-index="2"><span>지난 단계의 테스트가 남지 않아요.</span></div>
+<div id="cap-rollback-3" class="clip cap" data-start="290.510" data-duration="3.181" data-track-index="2"><span>개선 후에는 모든 단계의 테스트를 메소드로 남기고,</span></div>
+<div id="cap-rollback-4" class="clip cap" data-start="293.691" data-duration="2.924" data-track-index="2"><span>@Transactional로 테스트마다 롤백해요.</span></div>
+<div id="cap-rollback-5" class="clip cap" data-start="296.615" data-duration="4.601" data-track-index="2"><span>그래서 실행 순서와 상관없이 매번 같은 데이터에서 시작해요.</span></div>
+<div id="cap-tests-0" class="clip cap" data-start="301.816" data-duration="4.420" data-track-index="2"><span>섹션을 마칠 때마다 MockMvc로 화면 요청도 테스트했어요.</span></div>
+<div id="cap-tests-1" class="clip cap" data-start="306.236" data-duration="3.806" data-track-index="2"><span>테스트는 2개에서 시작해서 53개가 됐어요.</span></div>
+<div id="cap-tests-2" class="clip cap" data-start="310.041" data-duration="2.232" data-track-index="2"><span>그리고 테스트가 정말 문제를 잡는지,</span></div>
+<div id="cap-tests-3" class="clip cap" data-start="312.274" data-duration="3.784" data-track-index="2"><span>코드를 잠시 되돌려 실패하는 것까지 확인했어요.</span></div>
+<div id="cap-tests-4" class="clip cap" data-start="316.057" data-duration="3.158" data-track-index="2"><span>예를 들어 CSRF를 끄면 보안 테스트 2개가,</span></div>
+<div id="cap-tests-5" class="clip cap" data-start="319.216" data-duration="4.320" data-track-index="2"><span>검색 쿼리에서 DISTINCT를 빼면 검색 테스트가 실패해요.</span></div>
+<div id="cap-etc-0" class="clip cap" data-start="324.136" data-duration="2.165" data-track-index="2"><span>작은 개선도 있어요.</span></div>
+<div id="cap-etc-1" class="clip cap" data-start="326.301" data-duration="3.092" data-track-index="2"><span>부트스트랩은 파일 대신 cdnjs 주소로,</span></div>
+<div id="cap-etc-2" class="clip cap" data-start="329.393" data-duration="2.768" data-track-index="2"><span>글꼴은 프리텐다드로 바꿨어요.</span></div>
+<div id="cap-etc-3" class="clip cap" data-start="332.161" data-duration="2.321" data-track-index="2"><span>브라우저 탭 제목은 페이지마다 다르게,</span></div>
+<div id="cap-etc-4" class="clip cap" data-start="334.482" data-duration="4.582" data-track-index="2"><span>템플릿에는 네임스페이스를 선언해서 편집기 경고를 없앴어요.</span></div>
+<div id="cap-outro-0" class="clip cap" data-start="339.664" data-duration="1.786" data-track-index="2"><span>정리할게요.</span></div>
+<div id="cap-outro-1" class="clip cap" data-start="341.450" data-duration="2.422" data-track-index="2"><span>프로필로 개발과 테스트 DB를 나눴고,</span></div>
+<div id="cap-outro-2" class="clip cap" data-start="343.872" data-duration="4.174" data-track-index="2"><span>엔티티는 LAZY와 질문 쪽 연관관계 관리로 바꿨어요.</span></div>
+<div id="cap-outro-3" class="clip cap" data-start="348.046" data-duration="1.908" data-track-index="2"><span>폼은 @NotBlank와 record로,</span></div>
+<div id="cap-outro-4" class="clip cap" data-start="349.954" data-duration="3.917" data-track-index="2"><span>상태를 바꾸는 요청은 토큰이 있는 폼으로 바꿨어요.</span></div>
+<div id="cap-outro-5" class="clip cap" data-start="353.872" data-duration="4.008" data-track-index="2"><span>그리고 53개의 테스트로 이 동작들을 고정했어요.</span></div>
+<div id="cap-end-0" class="clip cap" data-start="358.480" data-duration="3.516" data-track-index="2"><span>코드와 커밋 기록은 깃허브 저장소에 있어요.</span></div>
+<div id="cap-end-1" class="clip cap" data-start="361.996" data-duration="2.292" data-track-index="2"><span>봐 주셔서 감사합니다.</span></div>
+  <div class="bar"></div>
+  <audio id="vo" src="assets/narration.mp3" data-start="0" data-duration="365.79" data-track-index="0"></audio>
+</div>
+<script>
+const tl = gsap.timeline({ paused: true });
+function enter(sel, t, dur) {
+  const items = document.querySelectorAll(sel + " .in");
+  const step = Math.min(0.9, (dur * 0.45) / Math.max(1, items.length));
+  items.forEach((el, i) => {
+    const at = Math.max(0, t - 0.1) + i * step;
+    tl.fromTo(el, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, at);
+    el.querySelectorAll(".ln").forEach((ln, j) => {
+      tl.fromTo(ln, { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: 0.3, ease: "power2.out" }, at + 0.15 + j * 0.12);
+    });
+  });
+}
+enter("#sc-hook", 0.4, 9.864);
+tl.set(".tabs span", {color: "#8391ad", backgroundColor: "rgba(0,0,0,0)"}, 0);
+enter("#sc-flow", 10.864, 21.552);
+tl.set(".tabs span", {color: "#8391ad", backgroundColor: "rgba(0,0,0,0)"}, 10.714);
+enter("#sc-stack", 33.016, 17.88);
+tl.set(".tabs span", {color: "#8391ad", backgroundColor: "rgba(0,0,0,0)"}, 32.866);
+tl.set(".tabs span:nth-child(1)", {color: "#0b1220", backgroundColor: "#f29111"}, 32.866);
+enter("#sc-stack2", 51.496, 17.928);
+tl.set(".tabs span", {color: "#8391ad", backgroundColor: "rgba(0,0,0,0)"}, 51.346000000000004);
+tl.set(".tabs span:nth-child(1)", {color: "#0b1220", backgroundColor: "#f29111"}, 51.346000000000004);
+enter("#sc-built", 70.024, 20.544);
+tl.set(".tabs span", {color: "#8391ad", backgroundColor: "rgba(0,0,0,0)"}, 69.874);
+tl.set(".tabs span:nth-child(2)", {color: "#0b1220", backgroundColor: "#f29111"}, 69.874);
+enter("#sc-built2", 91.168, 19.584);
+tl.set(".tabs span", {color: "#8391ad", backgroundColor: "rgba(0,0,0,0)"}, 91.018);
+tl.set(".tabs span:nth-child(2)", {color: "#0b1220", backgroundColor: "#f29111"}, 91.018);
+enter("#sc-db", 111.352, 27.792);
+tl.set(".tabs span", {color: "#8391ad", backgroundColor: "rgba(0,0,0,0)"}, 111.202);
+tl.set(".tabs span:nth-child(3)", {color: "#0b1220", backgroundColor: "#f29111"}, 111.202);
+enter("#sc-db2", 139.744, 19.392);
+tl.set(".tabs span", {color: "#8391ad", backgroundColor: "rgba(0,0,0,0)"}, 139.594);
+tl.set(".tabs span:nth-child(3)", {color: "#0b1220", backgroundColor: "#f29111"}, 139.594);
+enter("#sc-lazy", 159.736, 21.816);
+tl.set(".tabs span", {color: "#8391ad", backgroundColor: "rgba(0,0,0,0)"}, 159.58599999999998);
+tl.set(".tabs span:nth-child(4)", {color: "#0b1220", backgroundColor: "#f29111"}, 159.58599999999998);
+enter("#sc-add", 182.152, 23.16);
+tl.set(".tabs span", {color: "#8391ad", backgroundColor: "rgba(0,0,0,0)"}, 182.00199999999998);
+tl.set(".tabs span:nth-child(4)", {color: "#0b1220", backgroundColor: "#f29111"}, 182.00199999999998);
+enter("#sc-orphan", 205.912, 15.72);
+tl.set(".tabs span", {color: "#8391ad", backgroundColor: "rgba(0,0,0,0)"}, 205.762);
+tl.set(".tabs span:nth-child(4)", {color: "#0b1220", backgroundColor: "#f29111"}, 205.762);
+enter("#sc-form", 222.232, 20.592);
+tl.set(".tabs span", {color: "#8391ad", backgroundColor: "rgba(0,0,0,0)"}, 222.082);
+tl.set(".tabs span:nth-child(5)", {color: "#0b1220", backgroundColor: "#f29111"}, 222.082);
+enter("#sc-csrf", 243.424, 25.368);
+tl.set(".tabs span", {color: "#8391ad", backgroundColor: "rgba(0,0,0,0)"}, 243.274);
+tl.set(".tabs span:nth-child(5)", {color: "#0b1220", backgroundColor: "#f29111"}, 243.274);
+enter("#sc-guard", 269.392, 12.192);
+tl.set(".tabs span", {color: "#8391ad", backgroundColor: "rgba(0,0,0,0)"}, 269.242);
+tl.set(".tabs span:nth-child(5)", {color: "#0b1220", backgroundColor: "#f29111"}, 269.242);
+enter("#sc-rollback", 282.184, 19.032);
+tl.set(".tabs span", {color: "#8391ad", backgroundColor: "rgba(0,0,0,0)"}, 282.03400000000005);
+tl.set(".tabs span:nth-child(6)", {color: "#0b1220", backgroundColor: "#f29111"}, 282.03400000000005);
+enter("#sc-tests", 301.816, 21.72);
+tl.set(".tabs span", {color: "#8391ad", backgroundColor: "rgba(0,0,0,0)"}, 301.666);
+tl.set(".tabs span:nth-child(6)", {color: "#0b1220", backgroundColor: "#f29111"}, 301.666);
+enter("#sc-etc", 324.136, 14.928);
+tl.set(".tabs span", {color: "#8391ad", backgroundColor: "rgba(0,0,0,0)"}, 323.98600000000005);
+enter("#sc-outro", 339.664, 18.216);
+tl.set(".tabs span", {color: "#8391ad", backgroundColor: "rgba(0,0,0,0)"}, 339.514);
+enter("#sc-end", 358.48, 5.808);
+tl.set(".tabs span", {color: "#8391ad", backgroundColor: "rgba(0,0,0,0)"}, 358.33000000000004);
+tl.to("#shot-list", {scale: 2.2, xPercent: -60.00, yPercent: -106.20, duration: 0.9, ease: "power2.inOut"}, 86.185);
+tl.to("#shot-list", {scale: 2.2, xPercent: -108.40, yPercent: 0.00, duration: 0.9, ease: "power2.inOut"}, 87.881);
+tl.to("#shot-detail", {scale: 2.4, xPercent: 0.00, yPercent: -58.00, duration: 0.9, ease: "power2.inOut"}, 94.321);
+tl.to("#shot-detail", {scale: 2.0, xPercent: 0.00, yPercent: 0.00, duration: 0.9, ease: "power2.inOut"}, 98.556);
+tl.to("#shot-search", {opacity: 1, duration: 0.6}, 100.911);
+tl.to("#shot-search", {scale: 1.35, xPercent: -17.50, yPercent: 0.00, duration: 0.9, ease: "power2.inOut"}, 100.911);
+tl.to("#ex1", {backgroundColor: "#3a2a12", scale: 1.02, duration: 0.2}, 341.45);
+tl.to("#ex1", {backgroundColor: "#131c2e", scale: 1, duration: 0.2}, 343.872);
+tl.to("#ex2", {backgroundColor: "#3a2a12", scale: 1.02, duration: 0.2}, 343.872);
+tl.to("#ex2", {backgroundColor: "#131c2e", scale: 1, duration: 0.2}, 348.046);
+tl.to("#ex3", {backgroundColor: "#3a2a12", scale: 1.02, duration: 0.2}, 348.046);
+tl.to("#ex3", {backgroundColor: "#131c2e", scale: 1, duration: 0.2}, 349.954);
+tl.to("#ex4", {backgroundColor: "#3a2a12", scale: 1.02, duration: 0.2}, 349.954);
+tl.to("#ex4", {backgroundColor: "#131c2e", scale: 1, duration: 0.2}, 354.262);
+tl.to("#ex5", {backgroundColor: "#3a2a12", scale: 1.02, duration: 0.2}, 354.262);
+tl.to("#ex5", {backgroundColor: "#131c2e", scale: 1, duration: 0.3}, 357.88);
+tl.fromTo(".bar", { scaleX: 0 }, { scaleX: 1, duration: 365.79, ease: "none" }, 0);
+window.__timelines = window.__timelines || {};
+window.__timelines["main"] = tl;
+tl.seek(0);
+</script>
+</body>
+</html>

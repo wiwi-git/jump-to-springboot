@@ -175,4 +175,40 @@ class QuestionControllerTest {
 
 		assertThat(questionRepository.count()).isEqualTo(beforeCount);
 	}
+
+	@Test
+	@DisplayName("글쓴이: 로그인한 사용자가 질문을 등록하면 그 사용자가 글쓴이로 저장된다")
+	void t9() throws Exception {
+		mvc
+				.perform(post("/question/create").with(csrf()).with(user("user1"))
+						.param("subject", "글쓴이가 있는 질문")
+						.param("content", "내용"))
+				.andExpect(status().is3xxRedirection());
+
+		Question question = questionRepository.findBySubject("글쓴이가 있는 질문");
+		assertThat(question.getAuthor().getUsername()).isEqualTo("user1");
+	}
+
+	@Test
+	@DisplayName("글쓴이: 비로그인이면 질문 등록 화면과 등록 요청 모두 로그인 화면으로 보낸다")
+	void t10() throws Exception {
+		long beforeCount = questionRepository.count();
+
+		mvc
+				.perform(get("/question/create"))
+				.andDo(print())
+				.andExpect(status().is3xxRedirection())
+				.andExpect(redirectedUrl("/user/login"));
+
+		// CSRF 토큰은 있지만 로그인하지 않았다 → @PreAuthorize가 막는다
+		mvc
+				.perform(post("/question/create").with(csrf())
+						.param("subject", "비로그인 질문")
+						.param("content", "내용"))
+				.andDo(print())
+				.andExpect(status().is3xxRedirection())
+				.andExpect(redirectedUrl("/user/login"));
+
+		assertThat(questionRepository.count()).isEqualTo(beforeCount);
+	}
 }

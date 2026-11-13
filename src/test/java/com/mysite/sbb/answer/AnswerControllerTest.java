@@ -66,6 +66,7 @@ class AnswerControllerTest {
 		Answer lastAnswer = answers.get(answers.size() - 1);
 		assertThat(lastAnswer.getContent()).isEqualTo("새 답변입니다.");
 		assertThat(lastAnswer.getQuestion().getId()).isEqualTo(2);
+		assertThat(lastAnswer.getAuthor().getUsername()).isEqualTo("user1");
 	}
 
 	@Test
@@ -88,6 +89,20 @@ class AnswerControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(view().name("question_detail"))
 				.andExpect(model().attributeHasFieldErrorCode("answerForm", "content", "NotBlank"));
+
+		assertThat(answerRepository.count()).isEqualTo(beforeCount);
+	}
+
+	@Test
+	@DisplayName("답변 등록: 비로그인이면 저장하지 않고 로그인 화면으로 보낸다")
+	void t4() throws Exception {
+		long beforeCount = answerRepository.count();
+
+		mvc
+				.perform(post("/answer/create/2").with(csrf()).param("content", "비로그인 답변"))
+				.andDo(print())
+				.andExpect(status().is3xxRedirection())
+				.andExpect(redirectedUrl("/user/login"));
 
 		assertThat(answerRepository.count()).isEqualTo(beforeCount);
 	}

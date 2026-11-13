@@ -17,7 +17,7 @@
 
 - [x] 2-01 프로젝트 구조
 - [x] 2-02 간단한 웹 프로그램
-- [ ] 2-03 JPA
+- [x] 2-03 JPA
   - [ ] 개선: application.yml 전환, dev 프로필 H2 파일 DB(`./db_dev`, MySQL 모드), `.gitignore`에 DB 파일 추가
 - [ ] 2-04 엔티티
 - [ ] 2-05 리포지터리
@@ -117,3 +117,10 @@
 - 이유: 교재 2-03. 설치 없이 쓸 수 있는 파일 DB(H2)를 준비하고 웹 콘솔로 접속해 본다
 - 결과: `~/local.mv.db` 생성(교재대로 `touch`), `/h2-console` 200, 콘솔 로그인 성공
 - 교재와 차이: Boot 4는 H2 콘솔 자동 설정이 별도 모듈이라 `spring-boot-h2console`을 추가해야 `/h2-console`이 열린다
+
+### 009 JPA, 완료 [교재] JPA 의존성과 설정
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/009)
+- 작업: `spring-boot-starter-data-jpa` 추가, `application.properties`에 dialect와 `ddl-auto=update`
+- 이유: 교재 2-03. SQL 대신 자바 객체로 DB를 다루는 JPA(구현체 Hibernate)를 연결한다
+- 결과: 서버 시작 로그에서 Hibernate ORM 7.4, HikariPool `jdbc:h2:~/local` 연결, EntityManagerFactory 초기화 확인
+- 교재와 차이: 없음. Hibernate 7은 H2Dialect를 직접 지정할 필요가 없다는 경고(HHH90000025)를 내지만 교재대로 둠

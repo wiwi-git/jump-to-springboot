@@ -495,3 +495,9 @@
 - 작업: `SecurityConfig`에 `.formLogin(loginPage("/user/login").defaultSuccessUrl("/"))`, `UserController`에 `GET /user/login` → `login_form.html`(username·password 입력, `${param.error}`면 오류 문구), navbar 로그인 링크를 `/user/login`으로
 - 이유: 교재 3-07. 로그인 화면은 우리가 만들지만, `POST /user/login` 처리(사용자 조회·비밀번호 비교·세션 저장)는 컨트롤러가 아니라 시큐리티 필터가 한다. 실패하면 시큐리티가 `?error`를 붙여 로그인 화면으로 돌려보낸다
 - 결과: 로그인 화면 `<title>로그인 | SBB</title>`, 틀린 비밀번호 → 302 `/user/login?error` → `사용자ID 또는 비밀번호를 확인해 주세요.` 아직 시큐리티가 우리 회원 테이블을 모르므로, 가입한 user1/1234도 로그인 실패(다음 커밋에서 해결). 확인 후 개발 DB 원래대로
+
+### 069 로그인/로그아웃, [교재] UserSecurityService로 회원 테이블 기반 인증
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/069)
+- 작업: `UserRole` enum(`ROLE_ADMIN`, `ROLE_USER`), `UserRepository.findByusername`, `UserSecurityService implements UserDetailsService`(username으로 `SiteUser`를 찾아 시큐리티 `User`로 반환, `admin`이면 ADMIN 권한), `SecurityConfig`에 `AuthenticationManager` 빈
+- 이유: 교재 3-07. 시큐리티는 로그인할 때 `UserDetailsService.loadUserByUsername`으로 사용자(아이디, 암호화된 비밀번호, 권한)를 받아 `PasswordEncoder`로 입력 비밀번호와 비교한다. 이 빈을 만들면 자동 생성 사용자 대신 우리 회원 테이블로 로그인한다
+- 결과: 가입한 user1/1234 → 302 `/`(로그인 성공, 세션 ID 바뀜), 틀린 비밀번호·없는 사용자 → `?error`. 서버 로그에 `Using generated security password`가 더 이상 나오지 않음. 확인 후 개발 DB 원래대로

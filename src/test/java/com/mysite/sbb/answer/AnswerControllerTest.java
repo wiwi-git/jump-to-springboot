@@ -4,8 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import java.util.List;
 
@@ -59,5 +61,20 @@ class AnswerControllerTest {
 				.perform(post("/answer/create/999").param("content", "새 답변입니다."))
 				.andDo(print())
 				.andExpect(status().isNotFound());
+	}
+
+	@Test
+	@DisplayName("답변 등록: 공백만 입력하면 저장하지 않고 상세 화면에 오류 표시")
+	void t3() throws Exception {
+		long beforeCount = answerRepository.count();
+
+		mvc
+				.perform(post("/answer/create/2").param("content", "   "))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(view().name("question_detail"))
+				.andExpect(model().attributeHasFieldErrorCode("answerForm", "content", "NotBlank"));
+
+		assertThat(answerRepository.count()).isEqualTo(beforeCount);
 	}
 }

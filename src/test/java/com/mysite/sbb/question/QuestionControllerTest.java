@@ -3,9 +3,12 @@ package com.mysite.sbb.question;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -29,6 +32,9 @@ class QuestionControllerTest {
 
 	@Autowired
 	private MockMvc mvc;
+
+	@Autowired
+	private QuestionRepository questionRepository;
 
 	@Test
 	@DisplayName("질문 상세: 있는 질문이면 200과 제목·내용")
@@ -57,5 +63,56 @@ class QuestionControllerTest {
 				.andExpect(result -> assertThat(result.getResolvedException())
 						.isInstanceOf(DataNotFoundException.class)
 						.hasMessage("question not found"));
+	}
+
+	@Test
+	@DisplayName("질문 등록: 제목·내용이 있으면 저장하고 목록으로 리다이렉트")
+	void t3() throws Exception {
+		long beforeCount = questionRepository.count();
+
+		mvc
+				.perform(post("/question/create")
+						.param("subject", "새 질문")
+						.param("content", "새 질문 내용"))
+				.andDo(print())
+				.andExpect(handler().methodName("questionCreate"))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(redirectedUrl("/question/list"));
+
+		assertThat(questionRepository.count()).isEqualTo(beforeCount + 1);
+		assertThat(questionRepository.findBySubject("새 질문").getContent()).isEqualTo("새 질문 내용");
+	}
+
+	@Test
+	@DisplayName("질문 등록: 공백만 입력하면 저장하지 않고 폼과 오류 메시지를 다시 보여 줌")
+	void t4() throws Exception {
+		long beforeCount = questionRepository.count();
+
+		mvc
+				.perform(post("/question/create")
+						.param("subject", "   ")
+						.param("content", "   "))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(view().name("question_form"))
+				.andExpect(model().attributeHasFieldErrorCode("questionForm", "subject", "NotBlank"))
+				.andExpect(model().attributeHasFieldErrorCode("questionForm", "content", "NotBlank"))
+				.andExpect(content().string(containsString("제목은 필수항목입니다.")))
+				.andExpect(content().string(containsString("내용은 필수항목입니다.")));
+
+		assertThat(questionRepository.count()).isEqualTo(beforeCount);
+	}
+
+	@Test
+	@DisplayName("질문 등록: 제목이 200자를 넘으면 오류")
+	void t5() throws Exception {
+		mvc
+				.perform(post("/question/create")
+						.param("subject", "가".repeat(201))
+						.param("content", "내용"))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(view().name("question_form"))
+				.andExpect(model().attributeHasFieldErrorCode("questionForm", "subject", "Size"));
 	}
 }

@@ -136,4 +136,31 @@ class QuestionControllerTest {
 				.andExpect(view().name("question_form"))
 				.andExpect(content().string(containsString("value=\"제목만 입력\"")));
 	}
+
+	@Test
+	@DisplayName("CSRF: 질문 등록 폼에는 th:action이 넣어 준 _csrf 토큰이 있다")
+	void t7() throws Exception {
+		mvc
+				.perform(get("/question/create"))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(content().string(containsString("<input type=\"hidden\" name=\"_csrf\" value=\"")));
+	}
+
+	@Test
+	@DisplayName("CSRF: 토큰 없이 POST하면 컨트롤러에 닿기 전에 403으로 막힌다")
+	void t8() throws Exception {
+		long beforeCount = questionRepository.count();
+
+		mvc
+				.perform(post("/question/create")
+						.param("subject", "토큰 없는 질문")
+						.param("content", "다른 사이트에서 보낸 요청"))
+				.andDo(print())
+				.andExpect(status().isForbidden())
+				// 시큐리티 필터에서 막혀 DispatcherServlet이 컨트롤러 메서드를 찾지 않았다
+				.andExpect(result -> assertThat(result.getHandler()).isNull());
+
+		assertThat(questionRepository.count()).isEqualTo(beforeCount);
+	}
 }

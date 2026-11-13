@@ -55,6 +55,7 @@
 - [x] 3-03 게시물 번호
 - [x] 3-04 답변 개수
 - [x] 3-05 스프링 시큐리티
+  - [x] 개선: CSRF 토큰 자동 삽입과 토큰 없는 POST 403을 테스트로 확인
 - [ ] 3-06 회원 가입
 - [ ] 3-07 로그인/로그아웃
 - [ ] 3-08 글쓴이
@@ -457,3 +458,9 @@
 - 작업: `SecurityConfig`에 `csrf.ignoringRequestMatchers("/h2-console/**")`, `headers`에 `XFrameOptionsHeaderWriter(SAMEORIGIN)`
 - 이유: 교재 3-05. H2 콘솔은 스프링이 만든 폼이 아니라 CSRF 토큰을 보내지 못해 로그인 POST가 403이 된다. 또 콘솔 화면은 frame으로 이루어져 있는데 시큐리티 기본값(`X-Frame-Options: DENY`)은 프레임 안에 페이지를 띄우지 못하게 막는다
 - 결과: H2 로그인 POST `/h2-console/login.do` 403 → 200(header·tables·query 프레임), 응답 헤더 `X-Frame-Options: SAMEORIGIN`. SBB 폼은 여전히 토큰 없이 POST하면 403. 교재와 차이: `AntPathRequestMatcher` 대신 문자열 `"/h2-console/**"`
+
+### 063 스프링 시큐리티, [개선] CSRF 보호를 테스트로 확인
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/063)
+- 작업: `QuestionControllerTest`에 t7(질문 폼에 `<input type="hidden" name="_csrf">`가 있음), t8(토큰 없이 POST → 403, 컨트롤러 핸들러 없음, 질문 수 그대로)
+- 이유: 강사 14168 46강. 시큐리티를 넣기 전에는 다른 사이트의 폼이 우리 서버로 POST를 보내도 처리되었고(CSRF 공격), 시큐리티를 넣으면 토큰 없는 POST는 필터에서 막힌다. 폼은 `th:action`을 써야 토큰이 자동으로 들어간다. 이 두 가지가 깨지면 화면만으로는 알기 어려워 테스트로 남긴다
+- 결과: 테스트 22개 통과. CSRF를 잠시 `csrf.disable()`로 바꾸면 t7·t8이 실패하는 것도 확인

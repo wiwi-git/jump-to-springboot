@@ -421,3 +421,9 @@
 - 작업: `TestInitData`에서 dev 프로필이면 `questionService.create`로 `테스트 데이터입니다:[001]`~`[300]` 질문 300개 생성(이미 있으면 건너뜀)
 - 이유: 교재 3-02. 페이징이 필요하다는 것을 보려면 목록에 질문이 많아야 한다. 교재는 테스트 메서드로 개발 DB에 300개를 넣는다
 - 결과: 테스트 20개 통과(test 프로필은 데이터 그대로), 서버 실행 후 목록에 질문 301행(기존 1 + 300), 다시 실행해도 300개가 더 생기지 않음. 교재와 차이: 테스트는 메모리 DB(test 프로필)를 쓰므로, 개발 DB에 넣으려고 `TestInitData`(dev 프로필)에서 만든다
+
+### 057 페이징, [교재] Page와 PageRequest로 한 페이지에 10개씩 조회
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/057)
+- 작업: `QuestionRepository.findAll(Pageable)`, `QuestionService.getList(int page)`는 `PageRequest.of(page, 10, Sort.by(createDate 내림차순))`, 컨트롤러는 `@RequestParam(value = "page", defaultValue = "0") int page`로 받아 모델에 `paging`(Page)을 담음, 템플릿은 `${paging}`을 반복
+- 이유: 교재 3-02. 전체를 가져오지 않고 DB에서 필요한 10개만 가져온다. `Page`는 목록과 함께 전체 개수·페이지 수·이전/다음 여부를 담고 있어 페이지 이동 링크를 만들 수 있다
+- 결과: `/question/list` 최신 10개(`[300]`~`[291]`), `?page=1`은 `[290]`~`[281]`, `?page=30`은 1개, `?page=31`은 0개. SQL 로그에 `order by create_date desc offset ? rows fetch first ? rows only`와 `count(q1_0.id)` 쿼리

@@ -38,3 +38,7 @@ out/
 
 ### macOS ###
 .DS_Store
+
+### H2 DB files ###
+*.mv.db
+*.trace.db

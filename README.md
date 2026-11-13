@@ -18,7 +18,7 @@
 - [x] 2-01 프로젝트 구조
 - [x] 2-02 간단한 웹 프로그램
 - [x] 2-03 JPA
-  - [ ] 개선: application.yml 전환, dev 프로필 H2 파일 DB(`./db_dev`, MySQL 모드), `.gitignore`에 DB 파일 추가
+  - [x] 개선: application.yml 전환, dev 프로필 H2 파일 DB(`./db_dev`, MySQL 모드), `.gitignore`에 DB 파일 추가
 - [ ] 2-04 엔티티
 - [ ] 2-05 리포지터리
   - [ ] 개선: test 프로필 H2 메모리 DB로 테스트 DB 분리
@@ -124,3 +124,9 @@
 - 이유: 교재 2-03. SQL 대신 자바 객체로 DB를 다루는 JPA(구현체 Hibernate)를 연결한다
 - 결과: 서버 시작 로그에서 Hibernate ORM 7.4, HikariPool `jdbc:h2:~/local` 연결, EntityManagerFactory 초기화 확인
 - 교재와 차이: 없음. Hibernate 7은 H2Dialect를 직접 지정할 필요가 없다는 경고(HHH90000025)를 내지만 교재대로 둠
+
+### 010 JPA, [개선] application.yml 전환과 dev 프로필 H2 파일 DB
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/010)
+- 작업: `application.properties` → `application.yml`(공통) + `application-dev.yml`(개발 DB `jdbc:h2:./db_dev;MODE=MySQL`, H2 콘솔), `spring.profiles.active: dev`, `.gitignore`에 `*.mv.db` `*.trace.db`
+- 이유: 강사 14163 5강 방식. 홈 디렉터리(`~/local`)가 아니라 프로젝트 안에 개발 DB를 두고, 환경(dev/test)별 설정을 파일로 나눌 준비. 계층 구조라 읽기 쉬운 YAML 사용
+- 결과: 서버 로그 `The following 1 profile is active: "dev"`, 프로젝트 루트에 `db_dev.mv.db` 생성, git에는 안 잡힘, H2 콘솔 `jdbc:h2:./db_dev;MODE=MySQL` 로그인 성공

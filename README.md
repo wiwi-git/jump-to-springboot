@@ -174,3 +174,9 @@
 - 작업: `count()`가 2인지 확인 → `findById(1)` 질문 `delete` → `count()`가 1인지 확인
 - 이유: 교재 2-05. 리포지터리의 `delete`와 `count` 사용
 - 결과: 1회 실행 통과, 로그에 `delete from question where id=?`, 개발 DB에 id 2만 남음. 이 테스트는 한 번 더 돌리면 `count()`가 1이라 실패한다(개발 DB 공유의 문제)
+
+### 018 리포지터리, [교재] 답변 저장 테스트
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/018)
+- 작업: `findById(2)` 질문을 `answer.setQuestion(q)`로 연결해 `AnswerRepository.save`
+- 이유: 교재 2-05. 답변은 어떤 질문의 답변인지 `Question` 객체로 연결한다
+- 결과: 1회 실행 통과, 개발 DB `answer`에 id 1, `QUESTION_ID` 2 저장

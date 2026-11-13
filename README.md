@@ -27,7 +27,7 @@
   - [x] 개선: `Question.addAnswer`와 `cascade = PERSIST`로 질문 쪽에서 답변 생성
   - [x] 개선: SQL 로그에 바인딩 값·조회 값·트랜잭션 시작/종료 출력
 - [x] 2-06 도메인별 분류
-- [ ] 2-07 질문 목록
+- [x] 2-07 질문 목록
 - [ ] 2-08 루트 URL
 - [ ] 2-09 서비스
 - [ ] 2-10 상세 페이지
@@ -231,3 +231,9 @@
 - 작업: `spring-boot-starter-thymeleaf`, `thymeleaf-layout-dialect` 추가, `templates/question_list.html`(`Hello Template`), 컨트롤러가 `@ResponseBody` 없이 `"question_list"` 반환
 - 이유: 교재 2-07. 자바 코드에서 HTML 문자열을 만들지 않고 템플릿 파일로 화면을 그린다
 - 결과: `/question/list` → 200, 본문 `<h2>Hello Template</h2>`. layout-dialect는 Boot 4 의존성 관리로 4.0.1이 들어옴
+
+### 027 질문 목록, 완료 [교재] 리포지터리로 조회한 질문 목록을 템플릿에 표시
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/027)
+- 작업: `QuestionController`에 `@RequiredArgsConstructor`로 `QuestionRepository` 생성자 주입, `findAll()` 결과를 `Model`에 `questionList`로 담음, 템플릿에서 `th:each`로 제목·작성일시 표 출력
+- 이유: 교재 2-07. 컨트롤러는 데이터를 모델에 담고, 화면 모양은 템플릿이 정한다
+- 결과: `/question/list` → 200, 표에 개발 DB의 질문 1건(`스프링부트 모델 질문입니다.`, 2-05 테스트가 남긴 데이터) 표시

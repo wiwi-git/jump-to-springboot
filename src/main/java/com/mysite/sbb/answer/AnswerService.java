@@ -38,7 +38,9 @@ public class AnswerService {
 		this.answerRepository.save(answer);
 	}
 
+	// 답변은 질문 쪽에서 지운다(Question.deleteAnswer). 트랜잭션이 끝날 때 orphanRemoval로 delete된다.
+	@Transactional
 	public void delete(Answer answer) {
-		this.answerRepository.delete(answer);
+		answer.getQuestion().deleteAnswer(answer);
 	}
 }

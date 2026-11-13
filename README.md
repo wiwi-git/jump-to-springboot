@@ -64,6 +64,7 @@
   - [x] 개선: 글쓴이 저장과 비로그인 등록 차단을 MockMvc 테스트로 확인
 - [x] 3-09 수정/삭제
   - [x] 개선: 삭제를 CSRF 토큰이 있는 DELETE 요청으로(hiddenmethod 필터), 수정·삭제 권한 테스트
+  - [x] 개선: 답변 삭제를 `Question.deleteAnswer`와 `orphanRemoval`로
 - [ ] 3-10 추천
 - [ ] 3-11 앵커
 - [ ] 3-12 마크다운
@@ -570,3 +571,9 @@
 - 작업: hiddenmethod 필터를 켜고 질문·답변 삭제를 `@DeleteMapping`으로, 상세의 삭제 버튼을 `th:action` POST 폼(`_method=DELETE`, `onsubmit` 확인 창)으로. `QuestionModifyDeleteTest`·`AnswerModifyDeleteTest` 추가(글쓴이만 수정·삭제, 남은 400, GET 삭제는 405)
 - 이유: 강사 14168 7강(GET은 조회용), 46강(시큐리티는 GET에 CSRF 토큰을 검사하지 않음). 교재의 GET 삭제는 다른 사이트의 `<img src=".../question/delete/1">`로도 실행된다. 41강·44강처럼 `_method` 파라미터로 폼에서 DELETE를 보내고 `@DeleteMapping`으로 받는다. 수정은 이미 CSRF 토큰이 있는 POST이고 등록과 같은 폼을 쓰므로 교재대로 둔다
 - 결과: 테스트 43개 통과. 실제 실행에서 GET 삭제 405, 토큰 없는 DELETE 403, 남의 글 400, 글쓴이 DELETE 302 후 삭제 확인. 확인 후 개발 DB 원래대로
+
+### 081 수정/삭제, [개선] 답변 삭제를 Question.deleteAnswer와 orphanRemoval로
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/081)
+- 작업: `answerList`에 `orphanRemoval = true`, `Question.deleteAnswer(answer)`(목록에서 제거), `AnswerService.delete`는 `@Transactional`로 `answer.getQuestion().deleteAnswer(answer)`. 같은 트랜잭션에서 삭제 후 `answerList`에서도 빠지는지 테스트 추가
+- 이유: 040 개선으로 답변을 질문 쪽에서 만들듯 지울 때도 질문 쪽에서 지운다. 교재의 `answerRepository.delete`는 메모리의 `answerList`에 지운 답변이 남는다(테스트로 실패 확인). 강사 14168 37강: `orphanRemoval`은 부모 목록에서 빠진 자식을 커밋 때 delete한다
+- 결과: 테스트 44개 통과. 실제 실행에서 답변 삭제 후 답변 수 2 → 1, SQL은 answerList 조회 후 커밋 때 `delete from answer`. 확인 후 개발 DB 원래대로

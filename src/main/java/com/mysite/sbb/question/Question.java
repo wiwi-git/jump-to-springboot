@@ -36,7 +36,7 @@ public class Question {
 
 	private LocalDateTime createDate;
 
-	@OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
 	private List<Answer> answerList = new ArrayList<>();
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -53,5 +53,12 @@ public class Question {
 		answerList.add(answer);
 
 		return answer;
+	}
+
+	// 목록에서 빼기만 하면 orphanRemoval로 트랜잭션이 끝날 때 delete된다
+	public boolean deleteAnswer(Answer answer) {
+		if (answer == null) return false;
+
+		return answerList.remove(answer);
 	}
 }

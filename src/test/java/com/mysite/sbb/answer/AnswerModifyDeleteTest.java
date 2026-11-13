@@ -132,4 +132,20 @@ class AnswerModifyDeleteTest {
 
 		assertThat(answerRepository.findById(answerId)).isPresent();
 	}
+
+	@Test
+	@DisplayName("답변 삭제: 삭제하면 같은 트랜잭션 안의 질문 answerList에서도 빠진다")
+	void t5() throws Exception {
+		Question question = questionService.getQuestion(2);
+		Answer answer = answerService.getAnswer(answerId);
+		assertThat(question.getAnswerList()).contains(answer);
+		long beforeCount = answerRepository.count();
+
+		answerService.delete(answer);
+
+		// 질문 쪽 목록에서 빠졌으므로 상세 화면의 답변 수·목록도 바로 맞는다
+		assertThat(question.getAnswerList()).doesNotContain(answer);
+		// orphanRemoval: 목록에서 빠진 답변은 flush 때 delete된다
+		assertThat(answerRepository.count()).isEqualTo(beforeCount - 1);
+	}
 }

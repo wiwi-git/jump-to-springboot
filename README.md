@@ -60,7 +60,7 @@
   - [x] 개선: `UserCreateForm`을 `record`와 `@NotBlank`로, 회원가입 MockMvc 테스트
 - [x] 3-07 로그인/로그아웃
   - [x] 개선: 로그아웃을 CSRF 토큰이 있는 POST 폼으로, 로그인·로그아웃 테스트
-- [ ] 3-08 글쓴이
+- [x] 3-08 글쓴이
 - [ ] 3-09 수정/삭제
 - [ ] 3-10 추천
 - [ ] 3-11 앵커
@@ -526,3 +526,9 @@
 - 작업: `@EnableMethodSecurity(prePostEnabled = true)`, 질문 등록(GET·POST)·답변 등록에 `@PreAuthorize("isAuthenticated()")`, `Principal.getName()`으로 회원을 찾아 `create(..., siteUser)`로 글쓴이 저장. 기존 MockMvc 테스트는 user1을 가입시키고 `with(user("user1"))`로 요청
 - 이유: 교재 3-08. 비로그인이면 `Principal`이 null이라 글쓴이를 정할 수 없으므로, 메서드 보안으로 로그인한 사용자만 실행하게 한다(비로그인은 로그인 화면으로). 교재와 차이: 040 개선대로 `Question.addAnswer(content, author)`로 답변 생성, record 폼 접근자 사용
 - 결과: 테스트 31개 통과. 비로그인 질문 등록 화면·답변 등록 → 302 `/user/login`, 로그인 후 질문·답변 등록 시 SQL에 `author_id = 1` 바인딩. 확인 후 개발 DB 원래대로
+
+### 074 글쓴이, 완료 [교재] 질문 목록·상세에 글쓴이 표시, 비로그인 답변 입력창 비활성화
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/074)
+- 작업: 목록에 글쓴이 열(가운데 정렬, 제목은 50% 폭·왼쪽 정렬), 상세의 질문·답변에 글쓴이, 답변 입력창은 `sec:authorize`로 비로그인이면 `disabled`
+- 이유: 교재 3-08. 예전 글은 글쓴이가 없으므로(null) `th:if`로 있을 때만 이름을 출력한다. 비로그인 사용자가 답변을 다 쓰고 나서 로그인 화면으로 튕기지 않도록 입력창을 막는다
+- 결과: 테스트 31개 통과. 목록에 `글쓴이` 열과 `user1`, 비로그인 상세는 `<textarea disabled>`, 로그인 상세는 입력 가능. 확인 후 개발 DB 원래대로

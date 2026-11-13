@@ -10,7 +10,7 @@
 ### 1장 개발 준비
 
 - [x] 1-02 개발 환경 준비 (프로젝트 생성)
-- [ ] 1-03 스프링부트 맛보기
+- [x] 1-03 스프링부트 맛보기
 - [ ] 1-04 도구 설치
 
 ### 2장 기본 기능
@@ -80,3 +80,9 @@
 - 작업: AGENTS.md 작업 루프를 생성 단계(AI가 3-14까지 커밋 생성)와 이해 단계(태그 체크아웃 후 질문·답변)로 변경
 - 이유: 작업마다 승인하는 방식이 너무 느려서
 - 결과: 다음 세션의 AI도 바뀐 방식을 따르도록 규칙 문서 갱신
+
+### 003 스프링부트 맛보기, 완료 [교재] HelloController로 /hello 응답
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/003)
+- 작업: `HelloController`에 `@GetMapping("/hello")` + `@ResponseBody`로 "Hello World" 문자열 반환
+- 이유: 교재 1-03에서 URL 요청이 컨트롤러 메서드로 연결되는 가장 작은 예를 만들어 본다
+- 결과: 테스트 통과, 서버 실행 후 `localhost:8080/hello` → 200, 본문 `Hello World`

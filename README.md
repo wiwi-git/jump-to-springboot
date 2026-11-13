@@ -28,6 +28,7 @@
   - [x] 개선: SQL 로그에 바인딩 값·조회 값·트랜잭션 시작/종료 출력
 - [x] 2-06 도메인별 분류
 - [x] 2-07 질문 목록
+  - [x] 개선: 타임리프 캐시는 dev 프로필에서만 끄기
 - [ ] 2-08 루트 URL
 - [ ] 2-09 서비스
 - [ ] 2-10 상세 페이지
@@ -237,3 +238,9 @@
 - 작업: `QuestionController`에 `@RequiredArgsConstructor`로 `QuestionRepository` 생성자 주입, `findAll()` 결과를 `Model`에 `questionList`로 담음, 템플릿에서 `th:each`로 제목·작성일시 표 출력
 - 이유: 교재 2-07. 컨트롤러는 데이터를 모델에 담고, 화면 모양은 템플릿이 정한다
 - 결과: `/question/list` → 200, 표에 개발 DB의 질문 1건(`스프링부트 모델 질문입니다.`, 2-05 테스트가 남긴 데이터) 표시
+
+### 028 질문 목록, [개선] 타임리프 캐시는 dev 프로필에서만 끄기
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/028)
+- 작업: `application-dev.yml`에 `spring.thymeleaf.cache: false`
+- 이유: 강사 14163 28~29강. 템플릿 캐시가 켜져 있으면 템플릿을 고쳐도 서버를 다시 켜야 반영된다. 개발 중에는 끄고, 운영(그 밖의 프로필)에서는 기본값(켜짐)으로 성능을 지킨다. devtools도 개발 실행 때 캐시를 꺼 주지만, 설정 파일에 명시해 두면 devtools 없이도 같은 동작이고 의도가 보인다
+- 결과: 서버 실행 중 빌드된 템플릿의 `<th>제목</th>`을 고치자 재시작 없이(Started 로그 1회) 다음 요청에 `<th>제목(수정)</th>` 반영

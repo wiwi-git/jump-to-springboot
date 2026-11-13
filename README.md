@@ -74,3 +74,9 @@
 - 이유: 교재 1-02의 sbb 프로젝트를 강사 환경 버전으로 준비 (ADR 0001)
 - 결과: 기본 테스트 통과, 서버 실행 후 `localhost:8080`에서 404 Whitelabel 페이지 확인
 - 교재와 차이: Boot 4에서 `spring-boot-starter-web` → `spring-boot-starter-webmvc`로 이름 변경
+
+### 002 작업 방식 변경, [설정] 생성 단계와 이해 단계 분리
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/002)
+- 작업: AGENTS.md 작업 루프를 생성 단계(AI가 3-14까지 커밋 생성)와 이해 단계(태그 체크아웃 후 질문·답변)로 변경
+- 이유: 작업마다 승인하는 방식이 너무 느려서
+- 결과: 다음 세션의 AI도 바뀐 방식을 따르도록 규칙 문서 갱신

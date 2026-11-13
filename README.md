@@ -269,3 +269,9 @@
 - 작업: `question` 패키지에 `@Service QuestionService`(`getList()`), `QuestionController`는 리포지터리 대신 서비스를 주입받아 호출
 - 이유: 교재 2-09. 컨트롤러가 리포지터리를 직접 쓰지 않고 서비스를 거치게 해서, 여러 컨트롤러가 같은 데이터 처리를 재사용하고 엔티티 다루는 일을 서비스에 모은다
 - 결과: 테스트 통과(11개), `/question/list` → 200, 화면은 그대로(개발 DB 질문 1행)
+
+### 033 상세 페이지, 시작 [교재] 질문 목록 제목에 상세 페이지 링크
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/033)
+- 작업: `question_list.html`의 제목을 `<a th:href="@{|/question/detail/${question.id}|}">`로 감쌈
+- 이유: 교재 2-10. 목록에서 제목을 누르면 그 질문의 상세 페이지로 가게 한다. `@{...}`는 URL을 만들고, `|...|`는 문자열 안에 `${}` 값을 끼워 넣는다
+- 결과: 목록에 `<a href="/question/detail/2">` 링크 생성. 아직 매핑이 없어 `/question/detail/2` → 404

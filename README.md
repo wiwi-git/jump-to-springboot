@@ -35,7 +35,7 @@
 - [x] 2-10 상세 페이지
   - [x] 개선: 상세 페이지 200과 없는 질문 404를 MockMvc 테스트로 확인
 - [x] 2-11 URL 프리픽스
-- [ ] 2-12 답변 기능
+- [x] 2-12 답변 기능
 - [ ] 2-13 웹 페이지 디자인
 - [ ] 2-14 부트스트랩
 - [ ] 2-15 표준 HTML 구조
@@ -306,3 +306,9 @@
 - 작업: `AnswerController`(`@RequestMapping("/answer")`, `@PostMapping("/create/{id}")`, `@RequestParam("content")`), `AnswerService.create(question, content)`가 `Answer`를 만들어 `answerRepository.save`, 저장 후 상세 페이지로 리다이렉트
 - 이유: 교재 2-12. 폼이 보낸 `content` 파라미터를 `@RequestParam`으로 받고, 답변 저장은 서비스에 맡긴다. 저장 뒤 리다이렉트하면 새로고침해도 POST가 다시 전송되지 않는다
 - 결과: `POST /answer/create/2` → 302 `/question/detail/2`, 개발 DB `answer`에 2번 질문의 답변이 한 줄 추가됨(확인 후 개발 DB 원래대로 되돌림). 없는 질문 999 → 404
+
+### 039 답변 기능, 완료 [교재] 상세 페이지에 답변 개수와 목록 표시
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/039)
+- 작업: `question_detail.html`에 `${#lists.size(question.answerList)}개의 답변이 있습니다.`와 `th:each`로 답변 내용 `<li>` 목록
+- 이유: 교재 2-12. 질문 엔티티의 `answerList`로 그 질문에 달린 답변을 바로 꺼낸다(답변 리포지터리를 따로 부르지 않음). `#lists.size`는 타임리프 유틸리티
+- 결과: 답변 등록 → 리다이렉트된 상세 페이지에 `2개의 답변이 있습니다.`, 기존 답변과 새 답변 `<li>` 2개(확인 후 개발 DB 원래대로)

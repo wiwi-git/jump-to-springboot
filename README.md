@@ -489,3 +489,9 @@
 - 작업: `UserCreateForm`을 `record`로 바꾸고 `@NotEmpty` → `@NotBlank`, 컨트롤러는 `userCreateForm.password1()` 등 접근자로 읽음. `UserControllerTest` 추가(정상 가입·암호화, 공백 입력, 비밀번호 불일치, 중복 ID)
 - 이유: 053·054와 같은 근거(강사 14168 13~16강 `@NotBlank`, 40강 record 폼). 066 확인에서 공백 `"   "` ID·비밀번호로 가입이 되었다. 폼은 요청 값을 담아 전달만 하므로 setter가 필요 없다
 - 결과: 테스트 26개 통과. 실제 실행에서 공백 입력은 필수항목 오류, 비밀번호 불일치 때 ID·이메일 값 유지, 정상 가입 302. 확인 후 개발 DB 원래대로
+
+### 068 로그인/로그아웃, 시작 [교재] 로그인 화면과 formLogin 설정
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/068)
+- 작업: `SecurityConfig`에 `.formLogin(loginPage("/user/login").defaultSuccessUrl("/"))`, `UserController`에 `GET /user/login` → `login_form.html`(username·password 입력, `${param.error}`면 오류 문구), navbar 로그인 링크를 `/user/login`으로
+- 이유: 교재 3-07. 로그인 화면은 우리가 만들지만, `POST /user/login` 처리(사용자 조회·비밀번호 비교·세션 저장)는 컨트롤러가 아니라 시큐리티 필터가 한다. 실패하면 시큐리티가 `?error`를 붙여 로그인 화면으로 돌려보낸다
+- 결과: 로그인 화면 `<title>로그인 | SBB</title>`, 틀린 비밀번호 → 302 `/user/login?error` → `사용자ID 또는 비밀번호를 확인해 주세요.` 아직 시큐리티가 우리 회원 테이블을 모르므로, 가입한 user1/1234도 로그인 실패(다음 커밋에서 해결). 확인 후 개발 DB 원래대로

@@ -3,6 +3,7 @@ package com.mysite.sbb.question;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -13,6 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mysite.sbb.DataNotFoundException;
+import com.mysite.sbb.user.UserService;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -36,6 +39,15 @@ class QuestionControllerTest {
 
 	@Autowired
 	private QuestionRepository questionRepository;
+
+	@Autowired
+	private UserService userService;
+
+	// 질문·답변 등록은 로그인한 사용자만 할 수 있고(@PreAuthorize), 글쓴이로 저장할 회원이 DB에 있어야 한다
+	@BeforeEach
+	void setUp() {
+		userService.create("user1", "user1@test.com", "1234");
+	}
 
 	@Test
 	@DisplayName("질문 상세: 있는 질문이면 200과 제목·내용")
@@ -72,7 +84,7 @@ class QuestionControllerTest {
 		long beforeCount = questionRepository.count();
 
 		mvc
-				.perform(post("/question/create").with(csrf())
+				.perform(post("/question/create").with(csrf()).with(user("user1"))
 						.param("subject", "새 질문")
 						.param("content", "새 질문 내용"))
 				.andDo(print())
@@ -90,7 +102,7 @@ class QuestionControllerTest {
 		long beforeCount = questionRepository.count();
 
 		mvc
-				.perform(post("/question/create").with(csrf())
+				.perform(post("/question/create").with(csrf()).with(user("user1"))
 						.param("subject", "   ")
 						.param("content", "   "))
 				.andDo(print())
@@ -108,7 +120,7 @@ class QuestionControllerTest {
 	@DisplayName("질문 등록: 제목이 200자를 넘으면 오류")
 	void t5() throws Exception {
 		mvc
-				.perform(post("/question/create").with(csrf())
+				.perform(post("/question/create").with(csrf()).with(user("user1"))
 						.param("subject", "가".repeat(201))
 						.param("content", "내용"))
 				.andDo(print())
@@ -121,14 +133,14 @@ class QuestionControllerTest {
 	@DisplayName("질문 등록 폼: GET이면 빈 폼, 검증에 실패하면 입력한 값을 다시 채워 줌")
 	void t6() throws Exception {
 		mvc
-				.perform(get("/question/create"))
+				.perform(get("/question/create").with(user("user1")))
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(view().name("question_form"))
 				.andExpect(content().string(containsString("name=\"subject\" value=\"\"")));
 
 		mvc
-				.perform(post("/question/create").with(csrf())
+				.perform(post("/question/create").with(csrf()).with(user("user1"))
 						.param("subject", "제목만 입력")
 						.param("content", ""))
 				.andDo(print())
@@ -141,7 +153,7 @@ class QuestionControllerTest {
 	@DisplayName("CSRF: 질문 등록 폼에는 th:action이 넣어 준 _csrf 토큰이 있다")
 	void t7() throws Exception {
 		mvc
-				.perform(get("/question/create"))
+				.perform(get("/question/create").with(user("user1")))
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(content().string(containsString("<input type=\"hidden\" name=\"_csrf\" value=\"")));

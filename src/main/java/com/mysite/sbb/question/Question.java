@@ -42,10 +42,11 @@ public class Question {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private SiteUser author;
 
-	public Answer addAnswer(String content) {
+	public Answer addAnswer(String content, SiteUser author) {
 		Answer answer = new Answer();
 		answer.setContent(content);
 		answer.setQuestion(this);
+		answer.setAuthor(author);
 		answer.setCreateDate(LocalDateTime.now());
 		answerList.add(answer);
 

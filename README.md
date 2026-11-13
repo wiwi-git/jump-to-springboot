@@ -520,3 +520,9 @@
 - 작업: `Question`·`Answer`에 `@ManyToOne(fetch = LAZY) SiteUser author`, `UserService.getUser(username)`(없으면 `DataNotFoundException`)
 - 이유: 교재 3-08. 글쓴이를 저장하려면 질문·답변이 회원을 참조해야 한다(여러 글 → 한 회원이라 `@ManyToOne`). 로그인 정보에는 username만 있으므로 그 이름으로 회원 엔티티를 꺼내는 메서드가 필요하다. 교재와 차이: 013 개선을 따라 LAZY
 - 결과: 테스트 31개 통과. 실행 시 `question`·`answer` 테이블에 `author_id` 컬럼과 `site_user` 외래키가 추가됨. 확인 후 개발 DB 원래대로
+
+### 073 글쓴이, [교재] 로그인한 사용자만 질문·답변 등록하고 글쓴이 저장
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/073)
+- 작업: `@EnableMethodSecurity(prePostEnabled = true)`, 질문 등록(GET·POST)·답변 등록에 `@PreAuthorize("isAuthenticated()")`, `Principal.getName()`으로 회원을 찾아 `create(..., siteUser)`로 글쓴이 저장. 기존 MockMvc 테스트는 user1을 가입시키고 `with(user("user1"))`로 요청
+- 이유: 교재 3-08. 비로그인이면 `Principal`이 null이라 글쓴이를 정할 수 없으므로, 메서드 보안으로 로그인한 사용자만 실행하게 한다(비로그인은 로그인 화면으로). 교재와 차이: 040 개선대로 `Question.addAnswer(content, author)`로 답변 생성, record 폼 접근자 사용
+- 결과: 테스트 31개 통과. 비로그인 질문 등록 화면·답변 등록 → 302 `/user/login`, 로그인 후 질문·답변 등록 시 SQL에 `author_id = 1` 바인딩. 확인 후 개발 DB 원래대로

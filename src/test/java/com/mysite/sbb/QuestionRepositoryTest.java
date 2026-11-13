@@ -125,7 +125,7 @@ class QuestionRepositoryTest {
 		Question question = questionRepository.findById(2).get();
 		int beforeCount = question.getAnswerList().size();
 
-		Answer newAnswer = question.addAnswer("네 자동으로 생성됩니다.");
+		Answer newAnswer = question.addAnswer("네 자동으로 생성됩니다.", null);
 		assertThat(question.getAnswerList()).hasSize(beforeCount + 1);
 
 		// 아직 DB에 insert 전이라 id가 없다. flush하면 cascade PERSIST로 답변이 저장된다.

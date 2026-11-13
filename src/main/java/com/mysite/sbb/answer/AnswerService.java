@@ -1,6 +1,8 @@
 package com.mysite.sbb.answer;
 
 import com.mysite.sbb.question.Question;
+import com.mysite.sbb.user.SiteUser;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +15,7 @@ public class AnswerService {
 
 	// 답변은 질문 쪽에서 만든다(Question.addAnswer). 트랜잭션이 끝날 때 cascade PERSIST로 함께 저장된다.
 	@Transactional
-	public void create(Question question, String content) {
-		question.addAnswer(content);
+	public void create(Question question, String content, SiteUser author) {
+		question.addAnswer(content, author);
 	}
 }

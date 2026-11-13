@@ -41,7 +41,7 @@ public class TestInitData {
 		q2.setSubject("스프링부트 모델 질문입니다.");
 		q2.setContent("id는 자동으로 생성되나요?");
 		q2.setCreateDate(LocalDateTime.now());
-		q2.addAnswer("네 자동으로 생성됩니다."); // 2번 질문의 1번 답변
+		q2.addAnswer("네 자동으로 생성됩니다.", null); // 2번 질문의 1번 답변
 		questionRepository.save(q2); // 2번 질문 (cascade PERSIST로 답변도 함께 저장)
 	}
 
@@ -52,7 +52,7 @@ public class TestInitData {
 		for (int i = 1; i <= 300; i++) {
 			String subject = String.format("테스트 데이터입니다:[%03d]", i);
 			String content = "내용무";
-			this.questionService.create(subject, content);
+			this.questionService.create(subject, content, null);
 		}
 	}
 }

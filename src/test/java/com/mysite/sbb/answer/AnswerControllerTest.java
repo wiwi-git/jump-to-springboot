@@ -2,6 +2,7 @@ package com.mysite.sbb.answer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
@@ -12,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,8 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.mysite.sbb.user.UserService;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -33,13 +37,22 @@ class AnswerControllerTest {
 	@Autowired
 	private AnswerRepository answerRepository;
 
+	@Autowired
+	private UserService userService;
+
+	// 질문·답변 등록은 로그인한 사용자만 할 수 있고(@PreAuthorize), 글쓴이로 저장할 회원이 DB에 있어야 한다
+	@BeforeEach
+	void setUp() {
+		userService.create("user1", "user1@test.com", "1234");
+	}
+
 	@Test
 	@DisplayName("답변 등록: 질문의 addAnswer로 저장되고 상세 페이지로 리다이렉트")
 	void t1() throws Exception {
 		long beforeCount = answerRepository.count();
 
 		mvc
-				.perform(post("/answer/create/2").with(csrf()).param("content", "새 답변입니다."))
+				.perform(post("/answer/create/2").with(csrf()).with(user("user1")).param("content", "새 답변입니다."))
 				.andDo(print())
 				.andExpect(handler().handlerType(AnswerController.class))
 				.andExpect(handler().methodName("createAnswer"))
@@ -59,7 +72,7 @@ class AnswerControllerTest {
 	@DisplayName("답변 등록: 없는 질문이면 404")
 	void t2() throws Exception {
 		mvc
-				.perform(post("/answer/create/999").with(csrf()).param("content", "새 답변입니다."))
+				.perform(post("/answer/create/999").with(csrf()).with(user("user1")).param("content", "새 답변입니다."))
 				.andDo(print())
 				.andExpect(status().isNotFound());
 	}
@@ -70,7 +83,7 @@ class AnswerControllerTest {
 		long beforeCount = answerRepository.count();
 
 		mvc
-				.perform(post("/answer/create/2").with(csrf()).param("content", "   "))
+				.perform(post("/answer/create/2").with(csrf()).with(user("user1")).param("content", "   "))
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(view().name("question_detail"))

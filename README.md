@@ -470,3 +470,9 @@
 - 작업: `com.mysite.sbb.user` 패키지에 `SiteUser`(id, `@Column(unique = true)` username·email, password)와 `UserRepository extends JpaRepository<SiteUser, Long>`
 - 이유: 교재 3-06. 회원 정보를 저장할 테이블이 필요하다. 사용자 이름과 이메일은 중복되면 안 되므로 DB 유니크 제약을 건다. `User`는 시큐리티의 클래스 이름과 겹쳐서 `SiteUser`로 짓는다
 - 결과: 서버 실행 시 `create table site_user (id bigint ..., email, password, username)`와 username·email의 `unique` 제약 추가 SQL 확인. 확인 후 개발 DB 원래대로
+
+### 065 회원 가입, [교재] UserService와 BCrypt 비밀번호 암호화
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/065)
+- 작업: `SecurityConfig`에 `PasswordEncoder` 빈(`BCryptPasswordEncoder`), `UserService.create(username, email, password)`는 `passwordEncoder.encode(password)`로 암호화해 저장
+- 이유: 교재 3-06. 비밀번호를 그대로 저장하면 DB가 유출될 때 모두 드러난다. BCrypt 해시로 저장하고, 암호화 방식은 빈 하나로 정해 두어 바꿀 때 한 곳만 고친다
+- 결과: 테스트 22개 통과, 서버가 `PasswordEncoder` 빈을 주입받아 정상 시작(화면 연결은 다음 커밋)

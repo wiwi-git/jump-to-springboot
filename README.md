@@ -54,7 +54,7 @@
 - [x] 3-02 페이징
 - [x] 3-03 게시물 번호
 - [x] 3-04 답변 개수
-- [ ] 3-05 스프링 시큐리티
+- [x] 3-05 스프링 시큐리티
 - [ ] 3-06 회원 가입
 - [ ] 3-07 로그인/로그아웃
 - [ ] 3-08 글쓴이
@@ -451,3 +451,9 @@
 - 작업: `spring-boot-starter-security`, `thymeleaf-extras-springsecurity6` 추가, `SecurityConfig`(`@EnableWebSecurity`, `SecurityFilterChain` 빈)에서 `requestMatchers("/**").permitAll()`. 테스트에 `spring-boot-starter-security-test`를 추가하고 MockMvc POST에 `.with(csrf())`
 - 이유: 교재 3-05. 시큐리티를 넣기만 하면 모든 요청에 로그인을 요구하므로, 아직 로그인 기능이 없는 지금은 모든 URL을 허용한다. 시큐리티는 컨트롤러 앞의 필터에서 동작하고, 허용한 URL이라도 POST에는 CSRF 토큰을 검사한다
 - 결과: 테스트 20개 통과(csrf 추가 전에는 POST 테스트 7개가 403으로 실패). 서버에서 목록 200, 질문 폼에 `th:action` 덕분에 `<input type="hidden" name="_csrf">`가 자동으로 들어감, 토큰 없이 POST하면 403, 토큰과 함께 POST하면 302. H2 콘솔 로그인(POST)은 403, 응답 헤더 `X-Frame-Options: DENY`(다음 커밋에서 해결). 교재와 차이: Security 7에서 `AntPathRequestMatcher`가 없어져 문자열 `"/**"`로 지정
+
+### 062 스프링 시큐리티, 완료 [교재] H2 콘솔의 CSRF 예외와 같은 출처 프레임 허용
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/062)
+- 작업: `SecurityConfig`에 `csrf.ignoringRequestMatchers("/h2-console/**")`, `headers`에 `XFrameOptionsHeaderWriter(SAMEORIGIN)`
+- 이유: 교재 3-05. H2 콘솔은 스프링이 만든 폼이 아니라 CSRF 토큰을 보내지 못해 로그인 POST가 403이 된다. 또 콘솔 화면은 frame으로 이루어져 있는데 시큐리티 기본값(`X-Frame-Options: DENY`)은 프레임 안에 페이지를 띄우지 못하게 막는다
+- 결과: H2 로그인 POST `/h2-console/login.do` 403 → 200(header·tables·query 프레임), 응답 헤더 `X-Frame-Options: SAMEORIGIN`. SBB 폼은 여전히 토큰 없이 POST하면 403. 교재와 차이: `AntPathRequestMatcher` 대신 문자열 `"/h2-console/**"`

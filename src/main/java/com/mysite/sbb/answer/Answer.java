@@ -34,4 +34,6 @@ public class Answer {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	private SiteUser author;
+
+	private LocalDateTime modifyDate;
 }

@@ -551,3 +551,9 @@
 - 작업: `QuestionService.delete`, `GET /question/delete/{id}`(글쓴이가 아니면 400), layout에 `layout:fragment="script"` 자리, 상세에 글쓴이에게만 보이는 삭제 버튼과 `confirm` 후 `data-uri`로 이동하는 스크립트
 - 이유: 교재 3-09. 되돌릴 수 없는 삭제는 확인 창을 거친다. URL을 `href`가 아닌 `data-uri`에 두어 자바스크립트가 확인한 경우에만 이동한다. 스크립트는 부트스트랩 JS 뒤에 오도록 layout 끝에 자리를 만든다
 - 결과: 테스트 34개 통과. 남의 질문 삭제 400, 내 질문 삭제 302 `/` 후 상세 404, SQL은 답변 → 질문 순으로 delete(cascade REMOVE). 확인 후 개발 DB 원래대로
+
+### 078 수정/삭제, [교재] 글쓴이만 답변 수정
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/078)
+- 작업: `Answer.modifyDate`, `AnswerService.getAnswer`·`modify`, `GET·POST /answer/modify/{id}`(글쓴이가 아니면 400), `answer_form.html`, 상세에 답변 수정일시와 글쓴이에게만 보이는 답변 수정 버튼
+- 이유: 교재 3-09. 질문 수정과 같은 흐름(서버에서 글쓴이 확인 → 폼 → 검증 → 저장)을 답변에도 적용하고, 저장 후에는 답변이 달린 질문 상세로 돌아간다. 교재와 차이: record 폼이라 `new AnswerForm(content)`를 모델에 넣음, 새 템플릿에 xmlns와 title
+- 결과: 테스트 34개 통과. 글쓴이만 수정 버튼·수정 화면, 남이 요청하면 400, 공백은 필수항목 오류, 수정 후 `modified at`. 확인 후 개발 DB 원래대로

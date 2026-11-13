@@ -225,3 +225,9 @@
 - 작업: `question` 패키지에 `QuestionController`, `/question/list`에서 `@ResponseBody`로 "question list" 반환
 - 이유: 교재 2-07. 질문 목록 화면을 만들기 전에 URL 매핑부터 확인한다
 - 결과: `/question/list` → 200, 본문 `question list`
+
+### 026 질문 목록, [교재] 타임리프 의존성과 question_list 템플릿
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/026)
+- 작업: `spring-boot-starter-thymeleaf`, `thymeleaf-layout-dialect` 추가, `templates/question_list.html`(`Hello Template`), 컨트롤러가 `@ResponseBody` 없이 `"question_list"` 반환
+- 이유: 교재 2-07. 자바 코드에서 HTML 문자열을 만들지 않고 템플릿 파일로 화면을 그린다
+- 결과: `/question/list` → 200, 본문 `<h2>Hello Template</h2>`. layout-dialect는 Boot 4 의존성 관리로 4.0.1이 들어옴

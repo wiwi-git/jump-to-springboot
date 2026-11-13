@@ -73,7 +73,7 @@ class VoteTest {
 				.perform(post("/answer/vote/1").with(csrf()).with(user("user1")))
 				.andDo(print())
 				.andExpect(status().is3xxRedirection())
-				.andExpect(redirectedUrl("/question/detail/2"));
+				.andExpect(redirectedUrl("/question/detail/2#answer_1"));
 		mvc.perform(post("/answer/vote/1").with(csrf()).with(user("user1")));
 
 		Answer answer = answerService.getAnswer(1);

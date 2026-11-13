@@ -19,8 +19,12 @@ public class AnswerService {
 
 	// 답변은 질문 쪽에서 만든다(Question.addAnswer). 트랜잭션이 끝날 때 cascade PERSIST로 함께 저장된다.
 	@Transactional
-	public void create(Question question, String content, SiteUser author) {
-		question.addAnswer(content, author);
+	public Answer create(Question question, String content, SiteUser author) {
+		Answer answer = question.addAnswer(content, author);
+		// 앵커(#answer_id)에 쓸 id가 필요하다. cascade PERSIST는 flush 때 insert하므로 바로 flush해서 id를 받는다.
+		// (이 메서드를 더 큰 트랜잭션 안에서 부르면 커밋이 나중이라 flush하지 않으면 id가 null이다)
+		this.answerRepository.flush();
+		return answer;
 	}
 
 	public Answer getAnswer(Integer id) {

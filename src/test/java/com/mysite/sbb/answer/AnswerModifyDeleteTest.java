@@ -93,7 +93,7 @@ class AnswerModifyDeleteTest {
 						.param("content", "수정한 답변"))
 				.andDo(print())
 				.andExpect(status().is3xxRedirection())
-				.andExpect(redirectedUrl("/question/detail/2"));
+				.andExpect(redirectedUrl("/question/detail/2#answer_" + answerId));
 
 		Answer answer = answerRepository.findById(answerId).get();
 		assertThat(answer.getContent()).isEqualTo("수정한 답변");

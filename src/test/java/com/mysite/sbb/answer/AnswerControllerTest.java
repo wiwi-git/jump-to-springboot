@@ -57,7 +57,8 @@ class AnswerControllerTest {
 				.andExpect(handler().handlerType(AnswerController.class))
 				.andExpect(handler().methodName("createAnswer"))
 				.andExpect(status().is3xxRedirection())
-				.andExpect(redirectedUrl("/question/detail/2"));
+				.andExpect(result -> assertThat(result.getResponse().getRedirectedUrl())
+						.matches("/question/detail/2#answer_\\d+"));
 
 		// count 쿼리 전에 flush되므로, cascade PERSIST로 답변이 insert되었는지 확인할 수 있다.
 		assertThat(answerRepository.count()).isEqualTo(beforeCount + 1);

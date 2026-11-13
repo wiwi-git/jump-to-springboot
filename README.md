@@ -67,7 +67,7 @@
   - [x] 개선: 답변 삭제를 `Question.deleteAnswer`와 `orphanRemoval`로
 - [x] 3-10 추천
   - [x] 개선: 추천을 CSRF 토큰이 있는 POST 요청으로, 추천 테스트
-- [ ] 3-11 앵커
+- [x] 3-11 앵커
 - [ ] 3-12 마크다운
 - [ ] 3-13 검색
 - [ ] 3-14 도전과제 (작업자가 요청할 때 진행)
@@ -596,3 +596,9 @@
 - 작업: 질문·답변 추천을 `@PostMapping`으로, 상세의 추천 버튼을 `th:action` POST 폼(`onsubmit` 확인 창)으로. `VoteTest` 추가(중복 추천 한 번만, 질문·답변 추천 분리, GET 405, 토큰 없음 403, 비로그인은 로그인 화면)
 - 이유: 080 삭제와 같은 근거(14168 7강 GET은 조회용, 46강 GET은 CSRF 검사 밖). 교재의 GET 추천은 다른 사이트의 `<img>` 태그로도 눌린다
 - 결과: 테스트 49개 통과. 실제 실행에서 GET 추천 405, 토큰 없는 POST 403, 토큰 있는 POST 302 후 추천 수 1. 확인 후 개발 DB 원래대로
+
+### 085 앵커, 완료 [교재] 답변 등록·수정·추천 후 그 답변 위치로 이동
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/085)
+- 작업: 답변 카드마다 `<a th:id="|answer_${answer.id}|">`, `AnswerService.create`가 `Answer`를 돌려주고, 등록·수정·추천 후 `/question/detail/{id}#answer_{답변id}`로 리다이렉트
+- 이유: 교재 3-11. URL의 `#answer_2`는 브라우저가 그 id를 가진 요소로 스크롤하게 한다. 교재와 차이: 040 개선으로 답변이 cascade PERSIST(flush 때 insert)로 저장되어 바로는 id가 없으므로 `create`에서 `flush()`해 id를 받는다(안 하면 테스트에서 `#answer_null`)
+- 결과: 테스트 49개 통과. 실제 실행에서 등록 → `#answer_2`, 수정 → `#answer_2`, 추천 → `#answer_1`, 상세에 `<a id="answer_N">` 앵커. 확인 후 개발 DB 원래대로

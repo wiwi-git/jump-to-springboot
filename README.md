@@ -33,6 +33,7 @@
 - [x] 2-08 루트 URL
 - [x] 2-09 서비스
 - [x] 2-10 상세 페이지
+  - [x] 개선: 상세 페이지 200과 없는 질문 404를 MockMvc 테스트로 확인
 - [ ] 2-11 URL 프리픽스
 - [ ] 2-12 답변 기능
 - [ ] 2-13 웹 페이지 디자인
@@ -281,3 +282,9 @@
 - 작업: `/question/detail/{id}` 매핑(`@PathVariable`), `QuestionService.getQuestion(id)`, 없는 id면 `DataNotFoundException`(`@ResponseStatus(NOT_FOUND)`), `question_detail.html`에 제목·내용 출력
 - 이유: 교재 2-10. URL 경로의 값을 `@PathVariable`로 받아 질문을 조회한다. 질문이 없을 때 `Optional.get()`의 500(`No value present`) 대신 404와 `question not found`라는 뜻이 분명한 예외를 낸다
 - 결과: `/question/detail/2` → 200, 제목·내용 표시. `/question/detail/999` → 404, `message: entity not found`, 예외 `DataNotFoundException: question not found`
+
+### 035 상세 페이지, [개선] 상세 페이지와 없는 질문 404를 MockMvc 테스트로 고정
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/035)
+- 작업: `QuestionControllerTest`(`@SpringBootTest` + `@AutoConfigureMockMvc`, test 프로필): 있는 질문 → 200·`question_detail`·제목 포함, 없는 질문 → 404·`DataNotFoundException("question not found")`
+- 이유: 강사 14163 35강. 강사는 `.get()`(500, `No value present`)과 커스텀 예외(404, `question not found`)를 나란히 보여 주며 고객과 개발자 모두에게 친절한 쪽을 고른다. 그 차이가 나중에 리팩터링으로 사라지지 않도록, 서버를 띄워 curl로 보던 확인을 테스트로 남긴다
+- 결과: 테스트 13개 통과(기존 11 + 2). 브라우저(`Accept: text/html`)로 `/question/detail/999` → 404 Whitelabel 페이지에 `entity not found`, `DataNotFoundException: question not found`

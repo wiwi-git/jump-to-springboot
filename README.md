@@ -351,3 +351,9 @@
 - 작업: `style.css`에 Pretendard `@font-face`(100~900, jsDelivr woff2)와 `html > body { font-family: Pretendard }` 추가(교재의 textarea·submit 규칙은 유지), 목록·상세 템플릿에 `style.css` 링크
 - 이유: 강사 14163 39강의 커스터마이징. 부트스트랩 기본 글꼴은 OS마다 달라 한글 화면이 제각각이다. 한글용 웹폰트를 지정해 어느 환경에서나 같은 모양으로 보이게 한다
 - 결과: 브라우저에서 상세 페이지 `body` 글꼴 `Pretendard`, 400·500·700 굵기 로드 확인, 부트스트랩 버튼 색(rgb(13,110,253)) 정상
+
+### 046 표준 HTML 구조, 시작 [교재] layout.html과 질문 목록에 레이아웃 적용
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/046)
+- 작업: `templates/layout.html`(doctype·head·body, 부트스트랩·style.css 링크, `<th:block layout:fragment="content">`), `question_list.html`을 `<html layout:decorate="~{layout}">` + `<div layout:fragment="content">`로 변경
+- 이유: 교재 2-15. 지금까지 템플릿은 `<html>`·`<head>`·`<body>`가 없는 조각이었다. 공통 뼈대를 `layout.html` 하나에 두고, 각 페이지는 바뀌는 본문만 채운다(thymeleaf-layout-dialect, 026에서 추가)
+- 결과: `/question/list` 응답이 `<!doctype html>`로 시작, head에 cdnjs 부트스트랩·`/style.css`, 제목 `Hello, sbb!`, 목록 3칸 그대로. 교재와 차이: 레이아웃의 부트스트랩도 044 개선대로 cdnjs 링크

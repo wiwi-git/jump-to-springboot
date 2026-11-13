@@ -39,6 +39,7 @@
   - [x] 개선: 답변 생성을 `Question.addAnswer`와 `@Transactional`로 (`answerRepository.save` 대신)
 - [x] 2-13 웹 페이지 디자인
 - [x] 2-14 부트스트랩
+  - [x] 개선: 부트스트랩을 cdnjs(5.3.8)에서 불러오기
 - [ ] 2-15 표준 HTML 구조
 - [ ] 2-16 질문 등록
 
@@ -337,3 +338,9 @@
 - 작업: `question_detail.html`을 부트스트랩으로 변경: 질문·답변을 `card`로, 작성일시 배지(`#temporals.format`), 내용은 `white-space: pre-line`, 폼은 `form-control`·`btn btn-primary`. `style.css` 링크는 빠짐
 - 이유: 교재 2-14. 상세 화면도 목록과 같은 부트스트랩 스타일로 맞춘다. `pre-line`은 내용의 줄바꿈을 화면에 그대로 보여 준다
 - 결과: 상세 페이지에 `card my-3` 2개(질문, 답변 1개), 날짜 `2026-11-13 12:32`, `btn btn-primary` 답변등록 버튼
+
+### 044 부트스트랩, [개선] 부트스트랩을 cdnjs에서 불러오기
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/044)
+- 작업: `static/bootstrap.min.css`(5.3.2) 삭제, 목록·상세 템플릿이 `https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap.min.css`를 링크
+- 이유: 강사 14163 39강. 프론트엔드 라이브러리는 내려받아 저장소에 넣지 않고 cdnjs URL로 쓴다. 23만 바이트짜리 압축 파일을 커밋하지 않아도 되고, 버전은 URL만 바꿔 올린다
+- 결과: 테스트 15개 통과, 두 화면 모두 cdnjs 링크, cdnjs URL → 200 `text/css`(Bootstrap v5.3.8), `/bootstrap.min.css` → 404(로컬 파일 제거)

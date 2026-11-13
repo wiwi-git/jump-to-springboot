@@ -9,7 +9,7 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap.min.css">
     <!-- sbb CSS -->
     <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
-    <title>Hello, sbb!</title>
+    <title layout:title-pattern="$CONTENT_TITLE | $LAYOUT_TITLE">SBB</title>
 </head>
 <body>
 <!-- 기본 템플릿 안에 삽입될 내용 Start -->

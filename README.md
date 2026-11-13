@@ -43,6 +43,7 @@
   - [x] 개선: 프리텐다드 웹폰트 적용
 - [x] 2-15 표준 HTML 구조
   - [x] 개선: 템플릿에 `xmlns:th`·`xmlns:layout` 선언 (IDE 경고 제거)
+  - [x] 개선: `layout:title-pattern`으로 페이지별 제목
 - [ ] 2-16 질문 등록
 
 ### 3장 SBB 서비스 개발
@@ -370,3 +371,9 @@
 - 작업: `layout.html`, `question_list.html`, `question_detail.html`의 `<html>`에 `xmlns:th="http://www.thymeleaf.org"`, `xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"`
 - 이유: 강사 14168 44강. 선언이 없으면 IDE가 `layout:decorate`, `th:text`마다 `Namespace 'layout' is not bound` 경고를 띄우고 자동완성도 안 된다. 실행에는 영향이 없고, 렌더링 결과에서는 타임리프가 선언을 지운다
 - 결과: 테스트 15개 통과, 목록·상세 200, 응답의 `<html lang="ko">`에 xmlns 속성이 남지 않음
+
+### 049 표준 HTML 구조, [개선] 페이지마다 브라우저 탭 제목 지정
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/049)
+- 작업: `layout.html`의 `<title>`을 `layout:title-pattern="$CONTENT_TITLE | $LAYOUT_TITLE"`과 기본 제목 `SBB`로, 목록은 `<head><title>질문 목록</title></head>`, 상세는 질문 제목(`th:text="${question.subject}"`)
+- 이유: 강사 14168 44강 레이아웃. 교재 레이아웃은 모든 페이지 제목이 `Hello, sbb!`라 탭·방문 기록에서 페이지를 구분할 수 없다. 페이지는 자기 제목만 적고, 레이아웃이 사이트 이름을 붙인다
+- 결과: 목록 탭 제목 `질문 목록 | SBB`, 상세 `스프링부트 모델 질문입니다. | SBB`. 제목이 없는 페이지는 `SBB`만 나온다

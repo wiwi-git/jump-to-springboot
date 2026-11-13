@@ -219,3 +219,9 @@
 - 작업: `Question`·`QuestionRepository` → `com.mysite.sbb.question`, `Answer`·`AnswerRepository` → `com.mysite.sbb.answer`, 사용하는 곳에 import 추가
 - 이유: 교재 2-06. 파일이 늘어도 기능(도메인) 단위로 찾을 수 있게 패키지를 나눈다
 - 결과: 테스트 11개 통과, 서버 정상 기동, 개발 DB 테이블(QUESTION, ANSWER) 그대로
+
+### 025 질문 목록, 시작 [교재] QuestionController와 /question/list 매핑
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/025)
+- 작업: `question` 패키지에 `QuestionController`, `/question/list`에서 `@ResponseBody`로 "question list" 반환
+- 이유: 교재 2-07. 질문 목록 화면을 만들기 전에 URL 매핑부터 확인한다
+- 결과: `/question/list` → 200, 본문 `question list`

@@ -545,3 +545,9 @@
 - 작업: `Question.modifyDate`, `QuestionService.modify`, `GET·POST /question/modify/{id}`(글쓴이가 아니면 400 "수정권한이 없습니다."), `question_form`은 action 없이 현재 URL로 전송하고 CSRF hidden input 직접 추가, 상세에 수정일시와 글쓴이에게만 보이는 수정 버튼
 - 이유: 교재 3-09. 버튼을 숨기는 것만으로는 URL 직접 접근을 막지 못하므로 서버에서 글쓴이와 로그인 사용자를 비교한다. 등록·수정이 같은 폼을 쓰도록 action을 비운다. 교재와 차이: 폼이 record라 setter 대신 `new QuestionForm(subject, content)`를 모델에 넣음
 - 결과: 테스트 34개 통과. 글쓴이 user1만 수정 버튼이 보이고 수정 폼에 기존 값이 채워짐, 수정 후 `modified at` 표시. user2의 수정 화면·수정 요청은 400. 확인 후 개발 DB 원래대로
+
+### 077 수정/삭제, [교재] 글쓴이만 질문 삭제, 확인 창 자바스크립트
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/077)
+- 작업: `QuestionService.delete`, `GET /question/delete/{id}`(글쓴이가 아니면 400), layout에 `layout:fragment="script"` 자리, 상세에 글쓴이에게만 보이는 삭제 버튼과 `confirm` 후 `data-uri`로 이동하는 스크립트
+- 이유: 교재 3-09. 되돌릴 수 없는 삭제는 확인 창을 거친다. URL을 `href`가 아닌 `data-uri`에 두어 자바스크립트가 확인한 경우에만 이동한다. 스크립트는 부트스트랩 JS 뒤에 오도록 layout 끝에 자리를 만든다
+- 결과: 테스트 34개 통과. 남의 질문 삭제 400, 내 질문 삭제 302 `/` 후 상세 404, SQL은 답변 → 질문 순으로 delete(cascade REMOVE). 확인 후 개발 DB 원래대로

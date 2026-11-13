@@ -58,7 +58,7 @@
   - [x] 개선: CSRF 토큰 자동 삽입과 토큰 없는 POST 403을 테스트로 확인
 - [x] 3-06 회원 가입
   - [x] 개선: `UserCreateForm`을 `record`와 `@NotBlank`로, 회원가입 MockMvc 테스트
-- [ ] 3-07 로그인/로그아웃
+- [x] 3-07 로그인/로그아웃
 - [ ] 3-08 글쓴이
 - [ ] 3-09 수정/삭제
 - [ ] 3-10 추천
@@ -501,3 +501,9 @@
 - 작업: `UserRole` enum(`ROLE_ADMIN`, `ROLE_USER`), `UserRepository.findByusername`, `UserSecurityService implements UserDetailsService`(username으로 `SiteUser`를 찾아 시큐리티 `User`로 반환, `admin`이면 ADMIN 권한), `SecurityConfig`에 `AuthenticationManager` 빈
 - 이유: 교재 3-07. 시큐리티는 로그인할 때 `UserDetailsService.loadUserByUsername`으로 사용자(아이디, 암호화된 비밀번호, 권한)를 받아 `PasswordEncoder`로 입력 비밀번호와 비교한다. 이 빈을 만들면 자동 생성 사용자 대신 우리 회원 테이블로 로그인한다
 - 결과: 가입한 user1/1234 → 302 `/`(로그인 성공, 세션 ID 바뀜), 틀린 비밀번호·없는 사용자 → `?error`. 서버 로그에 `Using generated security password`가 더 이상 나오지 않음. 확인 후 개발 DB 원래대로
+
+### 070 로그인/로그아웃, 완료 [교재] 로그아웃과 로그인 상태에 따른 내비게이션 링크
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/070)
+- 작업: `SecurityConfig`에 `.logout(logoutRequestMatcher("/user/logout"), logoutSuccessUrl("/"), invalidateHttpSession(true))`, navbar는 `sec:authorize="isAnonymous()"`면 로그인, `isAuthenticated()`면 로그아웃 링크
+- 이유: 교재 3-07. 로그아웃도 시큐리티 필터가 처리한다(세션 무효화 후 메인으로). 타임리프 시큐리티 확장(`thymeleaf-extras-springsecurity6`, 061에서 추가)의 `sec:authorize`로 로그인 여부에 따라 태그를 보이거나 숨긴다
+- 결과: 비로그인 navbar `로그인`·`회원가입`, 로그인 후 `로그아웃`·`회원가입`, `GET /user/logout` → 302 `/` 후 다시 `로그인`. 교재와 차이: Security 7에서 `AntPathRequestMatcher`가 삭제되어 `PathPatternRequestMatcher.withDefaults().matcher("/user/logout")` 사용(교재처럼 GET 링크로 로그아웃됨). 확인 후 개발 DB 원래대로

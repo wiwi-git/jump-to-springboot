@@ -24,6 +24,7 @@
 - [x] 2-05 리포지터리
   - [x] 개선: test 프로필 H2 메모리 DB로 테스트 DB 분리
   - [x] 개선: `QuestionRepositoryTest`로 단계별 테스트를 모두 남기고 `@Transactional` 롤백으로 서로 독립
+  - [x] 개선: `Question.addAnswer`와 `cascade = PERSIST`로 질문 쪽에서 답변 생성
 - [ ] 2-06 도메인별 분류
 - [ ] 2-07 질문 목록
 - [ ] 2-08 루트 URL
@@ -199,3 +200,9 @@
 - 작업: `SbbApplicationTests` → `QuestionRepositoryTest`로 이름 변경, 교재 2-05의 단계(조회 5개, 수정, 삭제, 답변 생성·조회·목록) 10개를 `@DisplayName` 붙은 메서드로 모두 남김, 클래스에 `@Transactional`, AssertJ `assertThat`
 - 이유: 강사 14163 15~25강. 교재는 testJpa 하나를 지우고 고쳐 가며 써서 지난 단계가 남지 않는다. 테스트 메서드마다 트랜잭션을 열고 끝나면 롤백하면 수정·삭제·생성 테스트가 다른 테스트에 영향을 주지 않는다
 - 결과: 10개 통과(2번 실행). "답변 생성"이 먼저 실행돼도 "답변 목록 조회"는 1개 → 롤백 확인. 클래스 `@Transactional`을 빼면 LAZY 목록 조회가 `LazyInitializationException`으로 실패
+
+### 022 리포지터리, [개선] Question.addAnswer와 cascade PERSIST로 답변 생성
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/022)
+- 작업: `Question.addAnswer(content)`(답변 생성 + 양쪽 연결 + `answerList.add`), `cascade = {PERSIST, REMOVE}`, `TestInitData`가 `q2.addAnswer(...)` 후 질문만 save, 테스트 "답변 생성 by OneToMany"
+- 이유: 강사 14163 21~22강. 교재는 답변을 만들 때 `answer.setQuestion(q)` 후 `AnswerRepository.save`를 따로 한다. 질문 객체의 `answerList`에는 반영되지 않아 메모리 속 객체와 DB가 어긋난다. 질문(애그리거트의 중심)에서 답변을 추가하면 양쪽이 함께 맞춰지고, 저장은 cascade가 처리한다
+- 결과: 11개 통과. `PERSIST`를 빼면 TestInitData의 답변이 저장되지 않아 답변 관련 테스트 3개 실패

@@ -31,6 +31,16 @@ public class Question {
 
 	private LocalDateTime createDate;
 
-	@OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	private List<Answer> answerList = new ArrayList<>();
+
+	public Answer addAnswer(String content) {
+		Answer answer = new Answer();
+		answer.setContent(content);
+		answer.setQuestion(this);
+		answer.setCreateDate(LocalDateTime.now());
+		answerList.add(answer);
+
+		return answer;
+	}
 }

@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TestInitData {
 	private final QuestionRepository questionRepository;
-	private final AnswerRepository answerRepository;
 
 	@Bean
 	public ApplicationRunner testInitDataApplicationRunner() {
@@ -34,12 +33,7 @@ public class TestInitData {
 		q2.setSubject("스프링부트 모델 질문입니다.");
 		q2.setContent("id는 자동으로 생성되나요?");
 		q2.setCreateDate(LocalDateTime.now());
-		questionRepository.save(q2); // 2번 질문
-
-		Answer a = new Answer();
-		a.setContent("네 자동으로 생성됩니다.");
-		a.setQuestion(q2);
-		a.setCreateDate(LocalDateTime.now());
-		answerRepository.save(a); // 2번 질문의 1번 답변
+		q2.addAnswer("네 자동으로 생성됩니다."); // 2번 질문의 1번 답변
+		questionRepository.save(q2); // 2번 질문 (cascade PERSIST로 답변도 함께 저장)
 	}
 }

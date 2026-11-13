@@ -110,3 +110,10 @@
 - 작업: `MainController`에 `@GetMapping("/sbb")` + `@ResponseBody`로 환영 문자열 반환. 코드 변경이 없는 2-01(프로젝트 구조)도 진행 현황에 체크
 - 이유: 교재 2-02. 요청 → 컨트롤러 → 응답 흐름을 직접 만들어 본다
 - 결과: `@ResponseBody` 없이 `void`로 두면 `/sbb` → 500, 문자열을 반환하게 고친 뒤 `/sbb` → 200, `안녕하세요 sbb에 오신 것을 환영합니다.`
+
+### 008 JPA, 시작 [교재] H2 의존성과 데이터소스, H2 콘솔 설정
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/008)
+- 작업: `com.h2database:h2`, `spring-boot-h2console` 의존성 추가, `application.properties`에 H2 콘솔과 `jdbc:h2:~/local` 데이터소스 설정
+- 이유: 교재 2-03. 설치 없이 쓸 수 있는 파일 DB(H2)를 준비하고 웹 콘솔로 접속해 본다
+- 결과: `~/local.mv.db` 생성(교재대로 `touch`), `/h2-console` 200, 콘솔 로그인 성공
+- 교재와 차이: Boot 4는 H2 콘솔 자동 설정이 별도 모듈이라 `spring-boot-h2console`을 추가해야 `/h2-console`이 열린다

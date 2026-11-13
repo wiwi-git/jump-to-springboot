@@ -162,3 +162,9 @@
 - 작업: `QuestionRepository`에 `findBySubject`, `findBySubjectAndContent`, `findBySubjectLike` 선언, 조회 테스트 5개
 - 이유: 교재 2-05. 메서드 이름만 규칙대로 지으면 JPA가 where 조건 SQL을 만들어 준다
 - 결과: 테스트 5개 통과, SQL 로그에 `where q1_0.subject=?`, `subject=? and content=?`, `subject like ?` 확인. `findAll` 크기 2는 014에서 1번만 저장했기 때문에 맞는 값
+
+### 016 리포지터리, [교재] 질문 수정 테스트
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/016)
+- 작업: `findById(1)`로 가져온 질문의 제목을 `setSubject("수정된 제목")` 후 `save`
+- 이유: 교재 2-05. 이미 id가 있는 엔티티를 `save`하면 insert가 아니라 update가 실행된다
+- 결과: 로그에 `update question set ... where id=?`, 개발 DB id 1 제목이 `수정된 제목`으로 바뀜. 앞 커밋의 조회 테스트는 이제 개발 DB 상태와 맞지 않아 교재처럼 교체

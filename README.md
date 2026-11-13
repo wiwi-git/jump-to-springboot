@@ -383,3 +383,9 @@
 - 작업: 목록 아래 `질문 등록하기` 버튼, `GET /question/create` → `question_form.html`(제목 input, 내용 textarea), `POST /question/create`에서 `@RequestParam`으로 받아 `QuestionService.create` 후 목록으로 리다이렉트
 - 이유: 교재 2-16. 같은 URL을 GET(폼 보여 주기)과 POST(폼 처리)로 나눠 매핑한다. 메서드 이름이 같아도 매개변수가 달라 오버로딩된다
 - 결과: 폼 등록 → 302 `/question/list`, 목록에 새 질문 행 추가. 빈 제목·내용도 그대로 저장됨(검증은 다음 커밋). 확인 후 개발 DB 원래대로
+
+### 051 질문 등록, [교재] QuestionForm과 @Valid로 입력 검증
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/051)
+- 작업: `spring-boot-starter-validation` 추가, `QuestionForm`(`@NotEmpty`, `@Size(max = 200)`), POST는 `@Valid QuestionForm` + `BindingResult`로 오류 시 폼을 다시 보여 줌, 템플릿은 `th:object`·`th:field`와 `#fields.allErrors()` 오류 상자
+- 이유: 교재 2-16. 요청 파라미터를 폼 객체 하나로 받고, 애너테이션으로 검증 규칙을 선언한다. `th:field`가 입력값을 다시 채워 주므로 검증에 실패해도 쓴 내용이 남는다
+- 결과: 빈 제목·내용 → 200, 폼에 `제목은 필수항목입니다.`, `내용은 필수항목입니다.` 오류 표시. 제목만 쓰면 `value="제목만 입력"` 유지. 정상 입력은 302로 저장. 공백만 넣은 제목은 통과됨(@NotEmpty의 한계). 확인 후 개발 DB 원래대로

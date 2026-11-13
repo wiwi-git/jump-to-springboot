@@ -36,6 +36,7 @@
   - [x] 개선: 상세 페이지 200과 없는 질문 404를 MockMvc 테스트로 확인
 - [x] 2-11 URL 프리픽스
 - [x] 2-12 답변 기능
+  - [x] 개선: 답변 생성을 `Question.addAnswer`와 `@Transactional`로 (`answerRepository.save` 대신)
 - [ ] 2-13 웹 페이지 디자인
 - [ ] 2-14 부트스트랩
 - [ ] 2-15 표준 HTML 구조
@@ -312,3 +313,9 @@
 - 작업: `question_detail.html`에 `${#lists.size(question.answerList)}개의 답변이 있습니다.`와 `th:each`로 답변 내용 `<li>` 목록
 - 이유: 교재 2-12. 질문 엔티티의 `answerList`로 그 질문에 달린 답변을 바로 꺼낸다(답변 리포지터리를 따로 부르지 않음). `#lists.size`는 타임리프 유틸리티
 - 결과: 답변 등록 → 리다이렉트된 상세 페이지에 `2개의 답변이 있습니다.`, 기존 답변과 새 답변 `<li>` 2개(확인 후 개발 DB 원래대로)
+
+### 040 답변 기능, [개선] 답변 생성을 Question.addAnswer로
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/040)
+- 작업: `AnswerService.create`를 `@Transactional` + `question.addAnswer(content)`로 변경(`answerRepository.save` 호출 없음), `AnswerControllerTest`(등록 → 302·답변 1건 증가, 없는 질문 → 404) 추가
+- 이유: 강사 14163 37강. 강사는 `answerRepository.save` 대신 `@OneToMany` 필드로 답변을 만든다. 2-05 개선(016)에서 만든 `addAnswer`를 실제 기능에서도 쓰면 질문과 답변 목록이 메모리에서도 함께 맞춰지고, 저장은 트랜잭션 종료 때 cascade PERSIST가 한다. URL은 교재대로 `/answer/create/{id}` 유지(HTML 폼은 GET·POST만 보낼 수 있어서, 강사가 보여 준 RESTful 예시 `POST /questions/5/answers`는 3장 이후 교재 흐름과 맞지 않음)
+- 결과: 테스트 15개 통과. 실제 실행에서 `AnswerService.create` 트랜잭션 완료 시점에 insert SQL, 상세 페이지 답변 2개(확인 후 개발 DB 원래대로)

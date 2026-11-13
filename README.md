@@ -52,7 +52,7 @@
 
 - [x] 3-01 내비게이션 바
 - [x] 3-02 페이징
-- [ ] 3-03 게시물 번호
+- [x] 3-03 게시물 번호
 - [ ] 3-04 답변 개수
 - [ ] 3-05 스프링 시큐리티
 - [ ] 3-06 회원 가입
@@ -433,3 +433,9 @@
 - 작업: `question_list.html` 표 아래에 부트스트랩 `pagination`. 이전/다음은 `paging.hasPrevious`·`hasNext`가 false면 `disabled`, 페이지 번호는 `#numbers.sequence(0, totalPages-1)` 중 현재 페이지 앞뒤 5개만, 현재 페이지는 `active`
 - 이유: 교재 3-02. 페이지 번호를 URL에 직접 쓰지 않고 링크로 이동한다. 페이지가 31개라 모두 보여 주면 너무 길어서 현재 페이지 주변만 보여 준다
 - 결과: 첫 페이지는 `이전` disabled, 0~5, 0이 active. `?page=10`은 5~15, `?page=30`(마지막)은 25~30과 `다음` disabled. 빈 페이지(`?page=31`)는 페이징 영역 없음
+
+### 059 게시물 번호, 완료 [교재] 전체 개수 기준으로 번호 매기기
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/059)
+- 작업: 목록 번호를 `${loop.count}` 대신 `${paging.getTotalElements - (paging.number * paging.size) - loop.index}`로
+- 이유: 교재 3-03. `loop.count`는 페이지마다 1부터 다시 시작한다. 최신 글이 가장 큰 번호를 갖도록 "전체 개수 - 앞 페이지들의 개수 - 이 페이지 안의 순서"로 계산한다
+- 결과: 첫 페이지 301~292, `?page=1`은 291~282, 마지막 페이지(`?page=30`)는 1

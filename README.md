@@ -19,7 +19,7 @@
 - [x] 2-02 간단한 웹 프로그램
 - [x] 2-03 JPA
   - [x] 개선: application.yml 전환, dev 프로필 H2 파일 DB(`./db_dev`, MySQL 모드), `.gitignore`에 DB 파일 추가
-- [ ] 2-04 엔티티
+- [x] 2-04 엔티티
 - [ ] 2-05 리포지터리
   - [ ] 개선: test 프로필 H2 메모리 DB로 테스트 DB 분리
 - [ ] 2-06 도메인별 분류
@@ -136,3 +136,9 @@
 - 작업: `@Entity Question` (id 자동 증가, subject 200자, content TEXT, createDate)
 - 이유: 교재 2-04. 질문 테이블을 SQL 대신 자바 클래스로 정의한다
 - 결과: 서버 실행 후 개발 DB에 QUESTION 테이블 생성 (ID INTEGER identity, SUBJECT VARCHAR(200), CONTENT, CREATE_DATE TIMESTAMP)
+
+### 012 엔티티, 완료 [교재] Answer 엔티티와 질문-답변 연관관계
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/012)
+- 작업: `@Entity Answer` (`@ManyToOne Question question`), `Question.answerList`에 `@OneToMany(mappedBy = "question", cascade = REMOVE)`
+- 이유: 교재 2-04. 답변 N개가 질문 1개에 속하는 관계를 객체 참조로 표현한다
+- 결과: ANSWER 테이블에 QUESTION_ID 컬럼과 외래키 생성, QUESTION 테이블에는 답변용 컬럼이 생기지 않음(mappedBy 쪽은 컬럼 없음)

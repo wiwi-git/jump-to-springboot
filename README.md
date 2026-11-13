@@ -156,3 +156,9 @@
 - 이유: 교재 2-05. 리포지터리 인터페이스만 만들면 스프링 데이터 JPA가 구현체를 만들어 준다. 테스트로 DB에 데이터를 넣어 본다
 - 결과: 테스트 실행 1회 → 로그에 insert SQL 2번, 개발 DB `question`에 id 1·2 저장. 테스트가 개발 DB에 직접 데이터를 넣는다(다시 실행하면 같은 질문이 또 쌓인다)
 - 교재와 차이: 교재가 추가하는 `junit-jupiter`, `junit-platform-launcher`는 Boot 4 프로젝트에 이미 있음(`spring-boot-starter-webmvc-test`에 JUnit 포함)
+
+### 015 리포지터리, [교재] findAll·findById와 메서드 이름 기반 조회
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/015)
+- 작업: `QuestionRepository`에 `findBySubject`, `findBySubjectAndContent`, `findBySubjectLike` 선언, 조회 테스트 5개
+- 이유: 교재 2-05. 메서드 이름만 규칙대로 지으면 JPA가 where 조건 SQL을 만들어 준다
+- 결과: 테스트 5개 통과, SQL 로그에 `where q1_0.subject=?`, `subject=? and content=?`, `subject like ?` 확인. `findAll` 크기 2는 014에서 1번만 저장했기 때문에 맞는 값

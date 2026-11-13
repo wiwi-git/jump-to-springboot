@@ -34,7 +34,7 @@
 - [x] 2-09 서비스
 - [x] 2-10 상세 페이지
   - [x] 개선: 상세 페이지 200과 없는 질문 404를 MockMvc 테스트로 확인
-- [ ] 2-11 URL 프리픽스
+- [x] 2-11 URL 프리픽스
 - [ ] 2-12 답변 기능
 - [ ] 2-13 웹 페이지 디자인
 - [ ] 2-14 부트스트랩
@@ -288,3 +288,9 @@
 - 작업: `QuestionControllerTest`(`@SpringBootTest` + `@AutoConfigureMockMvc`, test 프로필): 있는 질문 → 200·`question_detail`·제목 포함, 없는 질문 → 404·`DataNotFoundException("question not found")`
 - 이유: 강사 14163 35강. 강사는 `.get()`(500, `No value present`)과 커스텀 예외(404, `question not found`)를 나란히 보여 주며 고객과 개발자 모두에게 친절한 쪽을 고른다. 그 차이가 나중에 리팩터링으로 사라지지 않도록, 서버를 띄워 curl로 보던 확인을 테스트로 남긴다
 - 결과: 테스트 13개 통과(기존 11 + 2). 브라우저(`Accept: text/html`)로 `/question/detail/999` → 404 Whitelabel 페이지에 `entity not found`, `DataNotFoundException: question not found`
+
+### 036 URL 프리픽스, 완료 [교재] QuestionController에 @RequestMapping("/question")
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/036)
+- 작업: `QuestionController` 클래스에 `@RequestMapping("/question")`, 메서드 매핑은 `/list`, `/detail/{id}`로 줄임
+- 이유: 교재 2-11. 이 컨트롤러의 URL은 모두 `/question`으로 시작하므로 공통 부분을 클래스에 한 번만 적는다
+- 결과: 테스트 13개 통과, `/` 302, `/question/list` 200, `/question/detail/2` 200, `/question/detail/999` 404 (URL은 그대로)

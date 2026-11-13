@@ -415,3 +415,9 @@
 - 작업: `templates/navbar.html`(`th:fragment="navbarFragment"`, SBB 로고·로그인 링크·햄버거 버튼), `layout.html` body 맨 위에 `<nav th:replace="~{navbar :: navbarFragment}">`, body 끝에 부트스트랩 JS
 - 이유: 교재 3-01. 모든 페이지 위에 같은 메뉴를 두려면 레이아웃에 한 번만 넣으면 된다. 좁은 화면에서 햄버거 버튼으로 메뉴를 펼치는 동작(collapse)은 부트스트랩 JS가 처리한다
 - 결과: 목록·상세 모두 `<nav class="navbar ...">`와 `SBB`, `로그인` 링크 포함. 교재와 차이: 부트스트랩 JS도 044 개선대로 cdnjs 5.3.8에서 불러옴(로컬 `bootstrap.min.js` 없음)
+
+### 056 페이징, 시작 [교재] 개발 DB에 테스트 데이터 300개 생성
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/056)
+- 작업: `TestInitData`에서 dev 프로필이면 `questionService.create`로 `테스트 데이터입니다:[001]`~`[300]` 질문 300개 생성(이미 있으면 건너뜀)
+- 이유: 교재 3-02. 페이징이 필요하다는 것을 보려면 목록에 질문이 많아야 한다. 교재는 테스트 메서드로 개발 DB에 300개를 넣는다
+- 결과: 테스트 20개 통과(test 프로필은 데이터 그대로), 서버 실행 후 목록에 질문 301행(기존 1 + 300), 다시 실행해도 300개가 더 생기지 않음. 교재와 차이: 테스트는 메모리 DB(test 프로필)를 쓰므로, 개발 DB에 넣으려고 `TestInitData`(dev 프로필)에서 만든다

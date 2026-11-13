@@ -445,3 +445,9 @@
 - 작업: 목록 제목 링크 뒤에 `<span class="text-danger small ms-2">`로 `${#lists.size(question.answerList)}`, 답변이 있을 때만(`th:if > 0`)
 - 이유: 교재 3-04. 목록에서 어떤 질문에 답변이 달렸는지 바로 보이게 한다
 - 결과: `?page=30`의 "스프링부트 모델 질문입니다." 옆에 빨간 `1`, 답변 없는 첫 페이지는 표시 없음. SQL 로그상 목록의 질문마다 답변 조회 쿼리가 1번씩 나감(첫 페이지 10번)
+
+### 061 스프링 시큐리티, 시작 [교재] 시큐리티 의존성과 모든 요청 허용 설정
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/061)
+- 작업: `spring-boot-starter-security`, `thymeleaf-extras-springsecurity6` 추가, `SecurityConfig`(`@EnableWebSecurity`, `SecurityFilterChain` 빈)에서 `requestMatchers("/**").permitAll()`. 테스트에 `spring-boot-starter-security-test`를 추가하고 MockMvc POST에 `.with(csrf())`
+- 이유: 교재 3-05. 시큐리티를 넣기만 하면 모든 요청에 로그인을 요구하므로, 아직 로그인 기능이 없는 지금은 모든 URL을 허용한다. 시큐리티는 컨트롤러 앞의 필터에서 동작하고, 허용한 URL이라도 POST에는 CSRF 토큰을 검사한다
+- 결과: 테스트 20개 통과(csrf 추가 전에는 POST 테스트 7개가 403으로 실패). 서버에서 목록 200, 질문 폼에 `th:action` 덕분에 `<input type="hidden" name="_csrf">`가 자동으로 들어감, 토큰 없이 POST하면 403, 토큰과 함께 POST하면 302. H2 콘솔 로그인(POST)은 403, 응답 헤더 `X-Frame-Options: DENY`(다음 커밋에서 해결). 교재와 차이: Security 7에서 `AntPathRequestMatcher`가 없어져 문자열 `"/**"`로 지정

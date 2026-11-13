@@ -1,6 +1,7 @@
 package com.mysite.sbb.answer;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
@@ -38,7 +39,7 @@ class AnswerControllerTest {
 		long beforeCount = answerRepository.count();
 
 		mvc
-				.perform(post("/answer/create/2").param("content", "새 답변입니다."))
+				.perform(post("/answer/create/2").with(csrf()).param("content", "새 답변입니다."))
 				.andDo(print())
 				.andExpect(handler().handlerType(AnswerController.class))
 				.andExpect(handler().methodName("createAnswer"))
@@ -58,7 +59,7 @@ class AnswerControllerTest {
 	@DisplayName("답변 등록: 없는 질문이면 404")
 	void t2() throws Exception {
 		mvc
-				.perform(post("/answer/create/999").param("content", "새 답변입니다."))
+				.perform(post("/answer/create/999").with(csrf()).param("content", "새 답변입니다."))
 				.andDo(print())
 				.andExpect(status().isNotFound());
 	}
@@ -69,7 +70,7 @@ class AnswerControllerTest {
 		long beforeCount = answerRepository.count();
 
 		mvc
-				.perform(post("/answer/create/2").param("content", "   "))
+				.perform(post("/answer/create/2").with(csrf()).param("content", "   "))
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(view().name("question_detail"))

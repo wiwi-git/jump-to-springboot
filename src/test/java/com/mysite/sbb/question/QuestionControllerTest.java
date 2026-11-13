@@ -2,6 +2,7 @@ package com.mysite.sbb.question;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -71,7 +72,7 @@ class QuestionControllerTest {
 		long beforeCount = questionRepository.count();
 
 		mvc
-				.perform(post("/question/create")
+				.perform(post("/question/create").with(csrf())
 						.param("subject", "새 질문")
 						.param("content", "새 질문 내용"))
 				.andDo(print())
@@ -89,7 +90,7 @@ class QuestionControllerTest {
 		long beforeCount = questionRepository.count();
 
 		mvc
-				.perform(post("/question/create")
+				.perform(post("/question/create").with(csrf())
 						.param("subject", "   ")
 						.param("content", "   "))
 				.andDo(print())
@@ -107,7 +108,7 @@ class QuestionControllerTest {
 	@DisplayName("질문 등록: 제목이 200자를 넘으면 오류")
 	void t5() throws Exception {
 		mvc
-				.perform(post("/question/create")
+				.perform(post("/question/create").with(csrf())
 						.param("subject", "가".repeat(201))
 						.param("content", "내용"))
 				.andDo(print())
@@ -127,7 +128,7 @@ class QuestionControllerTest {
 				.andExpect(content().string(containsString("name=\"subject\" value=\"\"")));
 
 		mvc
-				.perform(post("/question/create")
+				.perform(post("/question/create").with(csrf())
 						.param("subject", "제목만 입력")
 						.param("content", ""))
 				.andDo(print())

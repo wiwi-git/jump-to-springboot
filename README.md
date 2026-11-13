@@ -614,3 +614,9 @@
 - 작업: `QuestionService.search(kw)`(Specification: 글쓴이·답변·답변 글쓴이를 left join, distinct, 다섯 항목 like를 or), `getList(page, kw)`, 리포지터리 `findAll(Specification, Pageable)`, 목록 URL에 `kw` 파라미터
 - 이유: 교재 3-13. where 조건을 Criteria API로 조립한다. 답변을 join하면 질문이 답변 수만큼 늘어나 distinct가 필요하다. Spring Data JPA 4에서도 교재 코드가 그대로 동작
 - 결과: 테스트 49개 통과. 제목(사과)·답변 내용(바나나)·질문 작성자(user1)·답변 작성자(user2)로 각각 1건, 없는 말 0건, `kw`와 `page`가 함께 동작. 확인 후 개발 DB 원래대로
+
+### 088 검색, [교재] 검색창과 검색어를 유지하는 페이징
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/088)
+- 작업: 목록 위에 질문 등록 버튼과 검색창, 페이지 링크를 `data-page`로 바꾸고 `kw`·`page`를 hidden으로 가진 GET 폼(`searchForm`)을 자바스크립트로 전송
+- 이유: 교재 3-13. `?page=2` 링크만으로는 검색어가 빠져 전체 목록으로 돌아간다. 검색어와 페이지를 한 폼으로 보내 검색 결과 안에서 페이지를 넘긴다. 새 검색은 0페이지부터
+- 결과: 테스트 49개 통과. 브라우저에서 `[02` 검색 → `?kw=%5B02&page=0` 10건, `[1` 검색 결과의 3페이지 클릭 → `?kw=%5B1&page=3`, 검색어 유지. 확인 후 개발 DB 원래대로

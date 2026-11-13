@@ -464,3 +464,9 @@
 - 작업: `QuestionControllerTest`에 t7(질문 폼에 `<input type="hidden" name="_csrf">`가 있음), t8(토큰 없이 POST → 403, 컨트롤러 핸들러 없음, 질문 수 그대로)
 - 이유: 강사 14168 46강. 시큐리티를 넣기 전에는 다른 사이트의 폼이 우리 서버로 POST를 보내도 처리되었고(CSRF 공격), 시큐리티를 넣으면 토큰 없는 POST는 필터에서 막힌다. 폼은 `th:action`을 써야 토큰이 자동으로 들어간다. 이 두 가지가 깨지면 화면만으로는 알기 어려워 테스트로 남긴다
 - 결과: 테스트 22개 통과. CSRF를 잠시 `csrf.disable()`로 바꾸면 t7·t8이 실패하는 것도 확인
+
+### 064 회원 가입, 시작 [교재] SiteUser 엔티티와 UserRepository
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/064)
+- 작업: `com.mysite.sbb.user` 패키지에 `SiteUser`(id, `@Column(unique = true)` username·email, password)와 `UserRepository extends JpaRepository<SiteUser, Long>`
+- 이유: 교재 3-06. 회원 정보를 저장할 테이블이 필요하다. 사용자 이름과 이메일은 중복되면 안 되므로 DB 유니크 제약을 건다. `User`는 시큐리티의 클래스 이름과 겹쳐서 `SiteUser`로 짓는다
+- 결과: 서버 실행 시 `create table site_user (id bigint ..., email, password, username)`와 username·email의 `unique` 제약 추가 SQL 확인. 확인 후 개발 DB 원래대로

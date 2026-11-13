@@ -92,3 +92,9 @@
 - 작업: `developmentOnly("org.springframework.boot:spring-boot-devtools")` 추가, `/hello` 응답을 "Hello Spring Boot Board"로 변경
 - 이유: 교재 1-04. 코드를 고칠 때마다 서버를 직접 껐다 켜지 않도록
 - 결과: 서버 실행 중 응답 문자열을 고치고 컴파일만 하자 자동 재시작되어 `/hello`가 `Hello World` → `Hello Spring Boot Board`로 바뀜
+
+### 005 도구 설치, [교재] 롬복으로 Getter/Setter 자동 생성
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/005)
+- 작업: 롬복 의존성(`compileOnly` + `annotationProcessor`) 추가, `HelloLombok`에 `@Getter` `@Setter`
+- 이유: 교재 1-04. 반복되는 getter/setter를 직접 쓰지 않고 컴파일 시점에 만들게 한다
+- 결과: `HelloLombok.main` 실행 시 `헬로`, `5` 출력, `javap`로 getHello/setHello 등 메서드 생성 확인

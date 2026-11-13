@@ -5,14 +5,12 @@ import java.time.LocalDateTime;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 import com.mysite.sbb.question.Question;
 import com.mysite.sbb.question.QuestionRepository;
 
 import lombok.RequiredArgsConstructor;
 
-@Profile("test")
 @Configuration
 @RequiredArgsConstructor
 public class TestInitData {

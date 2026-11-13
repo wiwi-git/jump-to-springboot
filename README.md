@@ -44,7 +44,7 @@
 - [x] 2-15 표준 HTML 구조
   - [x] 개선: 템플릿에 `xmlns:th`·`xmlns:layout` 선언 (IDE 경고 제거)
   - [x] 개선: `layout:title-pattern`으로 페이지별 제목
-- [ ] 2-16 질문 등록
+- [x] 2-16 질문 등록
 
 ### 3장 SBB 서비스 개발
 
@@ -389,3 +389,9 @@
 - 작업: `spring-boot-starter-validation` 추가, `QuestionForm`(`@NotEmpty`, `@Size(max = 200)`), POST는 `@Valid QuestionForm` + `BindingResult`로 오류 시 폼을 다시 보여 줌, 템플릿은 `th:object`·`th:field`와 `#fields.allErrors()` 오류 상자
 - 이유: 교재 2-16. 요청 파라미터를 폼 객체 하나로 받고, 애너테이션으로 검증 규칙을 선언한다. `th:field`가 입력값을 다시 채워 주므로 검증에 실패해도 쓴 내용이 남는다
 - 결과: 빈 제목·내용 → 200, 폼에 `제목은 필수항목입니다.`, `내용은 필수항목입니다.` 오류 표시. 제목만 쓰면 `value="제목만 입력"` 유지. 정상 입력은 302로 저장. 공백만 넣은 제목은 통과됨(@NotEmpty의 한계). 확인 후 개발 DB 원래대로
+
+### 052 질문 등록, 완료 [교재] form_errors 공통 조각과 답변 입력 검증
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/052)
+- 작업: `templates/form_errors.html`(`th:fragment="formErrorsFragment"`)로 오류 상자를 분리해 질문 폼·답변 폼에서 `th:replace`, `AnswerForm`(`@NotEmpty`), 답변 등록도 `@Valid AnswerForm` + `BindingResult`, 상세 GET에 `AnswerForm` 매개변수
+- 이유: 교재 2-16. 같은 오류 표시 코드를 템플릿마다 복사하지 않고 조각(fragment)으로 재사용한다. 답변도 빈 내용으로 저장되지 않게 질문과 같은 방식으로 검증한다
+- 결과: 빈 답변 POST → 상세 화면 재표시, `내용은 필수항목입니다.` 오류 상자. 빈 질문 POST → 공통 조각으로 같은 오류 상자. 정상 답변 → 302, 답변 2개. 확인 후 개발 DB 원래대로

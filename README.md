@@ -51,7 +51,7 @@
 ### 3장 SBB 서비스 개발
 
 - [x] 3-01 내비게이션 바
-- [ ] 3-02 페이징
+- [x] 3-02 페이징
 - [ ] 3-03 게시물 번호
 - [ ] 3-04 답변 개수
 - [ ] 3-05 스프링 시큐리티
@@ -427,3 +427,9 @@
 - 작업: `QuestionRepository.findAll(Pageable)`, `QuestionService.getList(int page)`는 `PageRequest.of(page, 10, Sort.by(createDate 내림차순))`, 컨트롤러는 `@RequestParam(value = "page", defaultValue = "0") int page`로 받아 모델에 `paging`(Page)을 담음, 템플릿은 `${paging}`을 반복
 - 이유: 교재 3-02. 전체를 가져오지 않고 DB에서 필요한 10개만 가져온다. `Page`는 목록과 함께 전체 개수·페이지 수·이전/다음 여부를 담고 있어 페이지 이동 링크를 만들 수 있다
 - 결과: `/question/list` 최신 10개(`[300]`~`[291]`), `?page=1`은 `[290]`~`[281]`, `?page=30`은 1개, `?page=31`은 0개. SQL 로그에 `order by create_date desc offset ? rows fetch first ? rows only`와 `count(q1_0.id)` 쿼리
+
+### 058 페이징, 완료 [교재] 이전·다음과 페이지 번호 링크
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/058)
+- 작업: `question_list.html` 표 아래에 부트스트랩 `pagination`. 이전/다음은 `paging.hasPrevious`·`hasNext`가 false면 `disabled`, 페이지 번호는 `#numbers.sequence(0, totalPages-1)` 중 현재 페이지 앞뒤 5개만, 현재 페이지는 `active`
+- 이유: 교재 3-02. 페이지 번호를 URL에 직접 쓰지 않고 링크로 이동한다. 페이지가 31개라 모두 보여 주면 너무 길어서 현재 페이지 주변만 보여 준다
+- 결과: 첫 페이지는 `이전` disabled, 0~5, 0이 active. `?page=10`은 5~15, `?page=30`(마지막)은 25~30과 `다음` disabled. 빈 페이지(`?page=31`)는 페이징 영역 없음

@@ -22,7 +22,7 @@
 - [x] 2-04 엔티티
   - [x] 개선: `@ManyToOne(fetch = LAZY)`, `answerList`를 빈 리스트로 초기화
 - [x] 2-05 리포지터리
-  - [ ] 개선: test 프로필 H2 메모리 DB로 테스트 DB 분리
+  - [x] 개선: test 프로필 H2 메모리 DB로 테스트 DB 분리
 - [ ] 2-06 도메인별 분류
 - [ ] 2-07 질문 목록
 - [ ] 2-08 루트 URL
@@ -186,3 +186,9 @@
 - 작업: `testAnswerFind`(답변 1의 질문 id가 2), `testJpa`(질문 2의 `getAnswerList()` 1개) + `@Transactional`
 - 이유: 교재 2-05. `answerList`는 필요할 때 읽는 LAZY 컬렉션이라, DB 세션(트랜잭션)이 열려 있어야 꺼낼 수 있다
 - 결과: `@Transactional` 없이 실행 → `LazyInitializationException ... answerList (no session)` 실패, 붙인 뒤 2개 통과. 답변 조회 SQL은 answer만 읽고 question은 조인하지 않음(013의 LAZY 확인). 모든 기대값은 개발 DB에 쌓인 데이터(014~018 실행 결과)에 의존한다
+
+### 020 리포지터리, [개선] test 프로필 H2 메모리 DB와 TestInitData로 테스트 DB 분리
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/020)
+- 작업: `application-test.yml`(`jdbc:h2:mem:db_test;MODE=MySQL`), 테스트 클래스에 `@ActiveProfiles("test")`, test 프로필에서만 샘플 데이터(질문 2개, 2번 질문의 답변 1개)를 넣는 `TestInitData`
+- 이유: 강사 14163 5강·14강. 교재 방식은 테스트가 개발 DB를 함께 써서 테스트가 개발 데이터를 바꾸고, 결과가 개발 DB 상태에 따라 달라진다(017 삭제 테스트는 두 번째 실행에서 실패). 테스트 DB는 테스트할 때만 만들어지고 끝나면 사라진다
+- 결과: 테스트 로그 `profile is active: "test"`, `url=jdbc:h2:mem:db_test`, 2번 연속 실행 모두 통과. 실행 전후 개발 DB는 질문 1건·답변 1건 그대로

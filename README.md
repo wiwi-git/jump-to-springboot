@@ -69,7 +69,7 @@
   - [x] 개선: 추천을 CSRF 토큰이 있는 POST 요청으로, 추천 테스트
 - [x] 3-11 앵커
 - [x] 3-12 마크다운
-- [ ] 3-13 검색
+- [x] 3-13 검색
 - [ ] 3-14 도전과제 (작업자가 요청할 때 진행)
   - [ ] 답변 페이징과 정렬
   - [ ] 댓글
@@ -620,3 +620,9 @@
 - 작업: 목록 위에 질문 등록 버튼과 검색창, 페이지 링크를 `data-page`로 바꾸고 `kw`·`page`를 hidden으로 가진 GET 폼(`searchForm`)을 자바스크립트로 전송
 - 이유: 교재 3-13. `?page=2` 링크만으로는 검색어가 빠져 전체 목록으로 돌아간다. 검색어와 페이지를 한 폼으로 보내 검색 결과 안에서 페이지를 넘긴다. 새 검색은 0페이지부터
 - 결과: 테스트 49개 통과. 브라우저에서 `[02` 검색 → `?kw=%5B02&page=0` 10건, `[1` 검색 결과의 3페이지 클릭 → `?kw=%5B1&page=3`, 검색어 유지. 확인 후 개발 DB 원래대로
+
+### 089 검색, 완료 [교재] 같은 검색을 @Query(JPQL)로
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/089)
+- 작업: `QuestionRepository.findAllByKeyword`(@Query JPQL: 엔티티 조인 + `like %:kw%` 다섯 조건 or, distinct), `getList`가 이것을 사용. Specification `search`는 교재처럼 남겨 둠
+- 이유: 교재 3-13. 같은 검색을 JPQL로 쓰면 쿼리가 한눈에 보인다. 조건이 고정이면 @Query, 상황에 따라 조립하면 Specification. `Pageable`로 정렬·페이징·count는 스프링 데이터가 붙인다
+- 결과: 테스트 49개 통과. SQL 로그에 JPQL과 변환된 SQL, 검색 결과는 087(Specification)과 같음. 확인 후 개발 DB 원래대로

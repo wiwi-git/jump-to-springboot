@@ -37,7 +37,7 @@
 - [x] 2-11 URL 프리픽스
 - [x] 2-12 답변 기능
   - [x] 개선: 답변 생성을 `Question.addAnswer`와 `@Transactional`로 (`answerRepository.save` 대신)
-- [ ] 2-13 웹 페이지 디자인
+- [x] 2-13 웹 페이지 디자인
 - [ ] 2-14 부트스트랩
 - [ ] 2-15 표준 HTML 구조
 - [ ] 2-16 질문 등록
@@ -319,3 +319,9 @@
 - 작업: `AnswerService.create`를 `@Transactional` + `question.addAnswer(content)`로 변경(`answerRepository.save` 호출 없음), `AnswerControllerTest`(등록 → 302·답변 1건 증가, 없는 질문 → 404) 추가
 - 이유: 강사 14163 37강. 강사는 `answerRepository.save` 대신 `@OneToMany` 필드로 답변을 만든다. 2-05 개선(016)에서 만든 `addAnswer`를 실제 기능에서도 쓰면 질문과 답변 목록이 메모리에서도 함께 맞춰지고, 저장은 트랜잭션 종료 때 cascade PERSIST가 한다. URL은 교재대로 `/answer/create/{id}` 유지(HTML 폼은 GET·POST만 보낼 수 있어서, 강사가 보여 준 RESTful 예시 `POST /questions/5/answers`는 3장 이후 교재 흐름과 맞지 않음)
 - 결과: 테스트 15개 통과. 실제 실행에서 `AnswerService.create` 트랜잭션 완료 시점에 insert SQL, 상세 페이지 답변 2개(확인 후 개발 DB 원래대로)
+
+### 041 웹 페이지 디자인, 완료 [교재] static/style.css를 상세 페이지에 적용
+- [링크](https://github.com/wiwi-git/jump-to-springboot/tree/041)
+- 작업: `static/style.css`(textarea 너비 100%, 제출 버튼 위 여백), `question_detail.html` 첫 줄에 `<link th:href="@{/style.css}">`
+- 이유: 교재 2-13. `src/main/resources/static`의 파일은 컨트롤러 없이 `/파일명`으로 바로 제공된다. 화면 모양(CSS)을 템플릿과 분리한다
+- 결과: 상세 페이지에 `<link href="/style.css">`, `/style.css` → 200 `text/css`
